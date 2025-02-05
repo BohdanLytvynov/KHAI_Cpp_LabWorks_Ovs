@@ -30,3 +30,15 @@
 *.exe
 *.out
 *.app
+
+# VS folder
+.vs/
+
+# Binaries
+x64/Debug
+x64/Release
+
+KHAI_Labs/KHAI_Labs/x64/Debug
+KHAI_Labs/KHAI_Labs/x64/Release
+
+
