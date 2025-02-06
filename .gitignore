@@ -47,3 +47,5 @@ DataStructures/x64/Release
 DataStructures_UT/x64/Debug
 DataStructures_UT/x64/Release
 
+#pdb files
+*.pdb
