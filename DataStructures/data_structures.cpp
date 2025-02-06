@@ -11,14 +11,14 @@ int add_tools::executor::execute(
 
 int add_tools::executor::execute(
 	const exec_delegate& function,
-	std::exception& error)
+	std::exception& error) const
 {
 	return add_tools::executor::executeInternal(function, error);
 }
 
 int add_tools::executor::executeInternal(
 	const exec_delegate& function,
-	std::exception& error)
+	std::exception& error) const
 {		
 	int result = FAILED;
 

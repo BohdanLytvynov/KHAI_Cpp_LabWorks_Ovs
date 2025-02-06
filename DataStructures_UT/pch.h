@@ -10,5 +10,6 @@
 // add headers that you want to pre-compile here
 
 #include<windows.h>
+#include<random>
 
 #endif //PCH_H
