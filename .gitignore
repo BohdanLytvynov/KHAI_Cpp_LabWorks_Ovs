@@ -35,10 +35,15 @@
 .vs/
 
 # Binaries
-x64/Debug
-x64/Release
+KHAI_Labs/x64/Debug
+KHAI_Labs/x64/Release
 
 KHAI_Labs/KHAI_Labs/x64/Debug
 KHAI_Labs/KHAI_Labs/x64/Release
 
+DataStructures/x64/Debug
+DataStructures/x64/Release
+
+DataStructures_UT/x64/Debug
+DataStructures_UT/x64/Release
 
