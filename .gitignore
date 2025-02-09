@@ -49,3 +49,14 @@ DataStructures_UT/x64/Release
 
 #pdb files
 *.pdb
+
+Lab1/build/.vs
+Lab1/build/CMakeFiles
+Lab1/build/Debug
+Lab1/build/Release
+Lab1/build/*.dir
+Lab1/build/SDK
+Lab1/build/x64
+Lab1/build/UltralightSDK-prefix
+Lab1/build/CMakeCache.txt
+Lab1/build/cmake_install.cmake
