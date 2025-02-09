@@ -1,0 +1,26 @@
+{
+    "language":"English",
+    "main-page":
+    {        
+        "title":"Lab Work 1",
+        "langs":[
+        "Select language","English", "Ukrainian"
+        ],
+        "description":"Here is our Juce Store. You can use it store different type of juces. Use buttons Add, Edit and Remove to manipulate the data.",
+        "lv-title":"Juce List:",
+        "buttons":
+        {
+            "add":"Add",
+            "edit":"Edit",
+            "remove":"Remove"
+        }
+    },
+    "add-offcanv":
+    {
+
+    },
+    "edit-offcanv":
+    {
+
+    }    
+}
