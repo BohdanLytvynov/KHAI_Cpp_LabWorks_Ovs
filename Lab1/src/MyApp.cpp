@@ -3,6 +3,8 @@
 #include "MyApp.h"
 #include <JavaScriptCore/JSRetainPtr.h>
 
+
+
 #define WINDOW_WIDTH  600
 #define WINDOW_HEIGHT 400
 
@@ -58,6 +60,8 @@ MyApp::MyApp() {
   /// View's OnChangeCursor and OnChangeTitle events below.
   ///
   overlay_->view()->set_view_listener(this);
+
+  
 }
 
 MyApp::~MyApp() {
@@ -144,4 +148,14 @@ void MyApp::OnChangeTitle(ultralight::View* caller,
   /// We update the main window's title here.
   ///
   window_->SetTitle(title.utf8().data());
+}
+
+void MyApp::AllocateInitFields()
+{
+    MyApp::_juce_storage = new ds::linear_ds::single_linked_list<Juce>();
+}
+
+void MyApp::DeallocateInitFields()
+{
+    delete _juce_storage;
 }

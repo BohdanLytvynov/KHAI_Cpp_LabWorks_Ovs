@@ -4,7 +4,8 @@
 #define MYAPP_H
 
 #include <AppCore/AppCore.h>
-
+#include"Juce.h"
+#include"data_structures/data_structures.h"
 
 using namespace ultralight;
 
@@ -53,6 +54,10 @@ protected:
     RefPtr<Window> window_;
     RefPtr<Overlay> overlay_;
 private:
+    ds::linear_ds::single_linked_list<Juce>* _juce_storage;
+
+    void AllocateInitFields();
+    void DeallocateInitFields();
     
 };
 
