@@ -61,10 +61,12 @@ MyApp::MyApp() {
   ///
   overlay_->view()->set_view_listener(this);
 
-  
+  //Allocate initial fields with values
+  AllocateInitFields();
 }
 
 MyApp::~MyApp() {
+    DeallocateInitFields();
 }
 
 void MyApp::Run() {
@@ -153,9 +155,101 @@ void MyApp::OnChangeTitle(ultralight::View* caller,
 void MyApp::AllocateInitFields()
 {
     MyApp::_juce_storage = new ds::linear_ds::single_linked_list<Juce>();
+    MyApp::_path_to_localization;
+
+    std::exception error;
+
+    SLLCHPtr result = new SLLCH;
+
+    if (CalculatePathToSrc(__FILE__, "Lab1", "\\", 2, result, error) != 0)
+    {
+        delete result;
+    }
+
+    char* calcPathToLab = new char[result->length()];
+    result->ToArray(calcPathToLab, error);
+
+    auto len = strlen(calcPathToLab);
+
+   
 }
 
 void MyApp::DeallocateInitFields()
 {
     delete _juce_storage;
+}
+
+int MyApp::CalculatePathToSrc(
+    const char* path, 
+    const char* stopWord, 
+    const char* delim, 
+    unsigned char delimCount, 
+    SLLCHPtr result,
+    std::exception& error)
+{
+    if (path == nullptr)
+        throw std::exception("Path pointer was nullptr!");
+
+    if (stopWord == nullptr)
+        throw std::exception("stopWord parameter was nullptr!");
+
+    if (delim == nullptr)
+        throw std::exception("delim parameter was nullptr!");
+
+    if (result == nullptr)
+        throw std::exception("result parameter was nullptr!");
+   
+    size_t length = std::strlen(path);
+    unsigned char delimCountTemp = 0;
+    SLLCHPtr word_temp = new SLLCH;
+    for (size_t i = 0; i < length; i++)
+    {
+        if (path[i] == *delim)
+        {
+            char* wordFroCompare = new char[word_temp->length() + 1];
+
+            if (word_temp->addToEnd('\0', error) != 0)
+            {
+                delete wordFroCompare;
+                delete word_temp;
+                return FAILED;
+            }
+
+            if (word_temp->ToArray(wordFroCompare, error) != 0)
+            {
+                delete wordFroCompare;
+                delete word_temp;
+                return FAILED;
+            }
+
+            if (std::strcmp(wordFroCompare, stopWord) == 0)
+            {
+                if (result->addToEnd('\0', error) != 0)
+                {
+                    delete wordFroCompare;
+                    return FAILED;
+                }
+                else
+                {
+                    delete wordFroCompare;
+                    return SUCCESS;
+                }
+            }
+
+            delete wordFroCompare;
+
+            word_temp->clear(error);
+        }
+        else
+            if (word_temp->addToEnd(path[i], error) != 0)
+            {
+                delete word_temp;
+                return FAILED;
+            }
+        
+        if (result->addToEnd(path[i], error) != 0)
+        {
+            return FAILED;
+        }                              
+    }
 }

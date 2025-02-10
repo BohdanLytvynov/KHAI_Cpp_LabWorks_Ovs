@@ -13,8 +13,8 @@ int main()
 
     using namespace ds;
     using namespace std;
-
-     
+   
+    std::unique_ptr<ds::linear_ds::single_linked_list<int>> intsS = std::make_unique<ds::linear_ds::single_linked_list<int>>();
 }
 
 

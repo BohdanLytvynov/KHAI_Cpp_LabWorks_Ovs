@@ -9,6 +9,9 @@
 
 using namespace ultralight;
 
+typedef ds::linear_ds::single_linked_list<char>* SLLCHPtr;
+typedef ds::linear_ds::single_linked_list<char> SLLCH;
+
 class MyApp : public AppListener,
     public WindowListener,
     public LoadListener,
@@ -55,10 +58,11 @@ protected:
     RefPtr<Overlay> overlay_;
 private:
     ds::linear_ds::single_linked_list<Juce>* _juce_storage;
+    const char* _path_to_localization;
 
     void AllocateInitFields();
     void DeallocateInitFields();
-    
+    int CalculatePathToSrc(const char* path, const char* stopWord, const char* delim, unsigned char delimCount, SLLCHPtr result, std::exception& error);
 };
 
 #endif
