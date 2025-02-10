@@ -60,3 +60,4 @@ Lab1/build/x64
 Lab1/build/UltralightSDK-prefix
 Lab1/build/CMakeCache.txt
 Lab1/build/cmake_install.cmake
+!Lab1/src

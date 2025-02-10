@@ -48,13 +48,10 @@ function setLocalization(localization)
     getElementById("del-btn").innerHTML = buttons["del-btn"]
 
 }
-//data - an array of localization settings
-function setLocalizationFiles(data)
+//data - File with localization in JSON Format
+function setLocalizationFiles(locFile)
 {
-    for (let locFile in data)         
-    {
-        loc_files.set(locFile["language"], locFile);            
-    }
+    loc_files.set(locFile["language"], locFile);
 }
 
 function getElementById(elemId)
