@@ -2,7 +2,7 @@
 
 #include "MyApp.h"
 #include <JavaScriptCore/JSRetainPtr.h>
-
+#include<filesystem>
 
 
 #define WINDOW_WIDTH  600
@@ -154,29 +154,32 @@ void MyApp::OnChangeTitle(ultralight::View* caller,
 
 void MyApp::AllocateInitFields()
 {
-    MyApp::_juce_storage = new ds::linear_ds::single_linked_list<Juce>();
-    MyApp::_path_to_localization;
+    MyApp::_juce_storage = new ds::linear_ds::single_linked_list<Juce>();    
 
     std::exception error;
 
-    SLLCHPtr result = new SLLCH;
+    std::unique_ptr<SLLCH> result = std::make_unique<SLLCH>();
 
-    if (CalculatePathToSrc(__FILE__, "Lab1", "\\", 2, result, error) != 0)
+    if (CalculatePathToSrc(__FILE__, "Lab1", "\\", 2, result.get(), error) != 0)
     {
-        delete result;
+        //Write to Log smth
     }
+        
+    _path_to_lab_folder = new char[result->length()];
+    result->ToArray(_path_to_lab_folder, error);
+    auto len = result->length();
+    _path_to_assets = new char[len + strlen("\\assets") + 1];
+    strcpy(_path_to_assets, _path_to_lab_folder);
+    strcat(_path_to_assets, "\\assets");
 
-    char* calcPathToLab = new char[result->length()];
-    result->ToArray(calcPathToLab, error);
-
-    auto len = strlen(calcPathToLab);
-
-   
+    
 }
 
 void MyApp::DeallocateInitFields()
 {
     delete _juce_storage;
+    delete[] _path_to_lab_folder;
+    delete[] _path_to_assets;
 }
 
 int MyApp::CalculatePathToSrc(
@@ -201,7 +204,7 @@ int MyApp::CalculatePathToSrc(
    
     size_t length = std::strlen(path);
     unsigned char delimCountTemp = 0;
-    SLLCHPtr word_temp = new SLLCH;
+    std::unique_ptr<SLLCH> word_temp = std::make_unique<SLLCH>();
     for (size_t i = 0; i < length; i++)
     {
         if (path[i] == *delim)
@@ -210,15 +213,13 @@ int MyApp::CalculatePathToSrc(
 
             if (word_temp->addToEnd('\0', error) != 0)
             {
-                delete wordFroCompare;
-                delete word_temp;
+                delete[] wordFroCompare;                
                 return FAILED;
             }
 
             if (word_temp->ToArray(wordFroCompare, error) != 0)
             {
-                delete wordFroCompare;
-                delete word_temp;
+                delete[] wordFroCompare;                
                 return FAILED;
             }
 
@@ -226,24 +227,23 @@ int MyApp::CalculatePathToSrc(
             {
                 if (result->addToEnd('\0', error) != 0)
                 {
-                    delete wordFroCompare;
+                    delete[] wordFroCompare;
                     return FAILED;
                 }
                 else
                 {
-                    delete wordFroCompare;
+                    delete[] wordFroCompare;
                     return SUCCESS;
                 }
             }
 
-            delete wordFroCompare;
+            delete[] wordFroCompare;
 
             word_temp->clear(error);
         }
         else
             if (word_temp->addToEnd(path[i], error) != 0)
-            {
-                delete word_temp;
+            {                
                 return FAILED;
             }
         

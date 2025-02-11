@@ -58,7 +58,8 @@ protected:
     RefPtr<Overlay> overlay_;
 private:
     ds::linear_ds::single_linked_list<Juce>* _juce_storage;
-    const char* _path_to_localization;
+    char* _path_to_lab_folder;
+    char* _path_to_assets;
 
     void AllocateInitFields();
     void DeallocateInitFields();

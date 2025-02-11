@@ -3,6 +3,11 @@ cmake_minimum_required(VERSION 3.3.2)
 
 include(cmake/App.cmake)
 
+set(BOOST_ROOT ${CMAKE_HOME_DIRECTORY}/src/boost/filesystem)
+set(BOOST_INCLUDEDIR ${CMAKE_HOME_DIRECTORY}/src/boost/filesystem)
+
+find_package(Boost 1.82 REQUIRED COMPONENTS system filesystem)
+
 set(SOURCES 
 "src/MyApp.h"
 "src/MyApp.cpp"
