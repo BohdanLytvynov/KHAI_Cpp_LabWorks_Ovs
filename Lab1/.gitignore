@@ -2,3 +2,7 @@
 [Bb]uild/
 build_*/
 .DS_Store
+
+#boost root folder. Can be different on different machines
+boostRoot.txt
+

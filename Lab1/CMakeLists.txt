@@ -3,24 +3,6 @@ cmake_minimum_required(VERSION 3.3.2)
 
 include(cmake/App.cmake)
 
-set(Boost_USE_STATIC_LIBS OFF) 
-set(Boost_USE_MULTITHREADED ON)  
-set(Boost_USE_STATIC_RUNTIME OFF) 
-set(Boost_NO_SYSTEM_PATHS TRUE) 
-
-if (Boost_NO_SYSTEM_PATHS)
-  set(BOOST_ROOT "${CMAKE_CURRENT_SOURCE_DIR}/../../3p/boost")
-  set(BOOST_INCLUDE_DIRS "${BOOST_ROOT}/include")
-  set(BOOST_LIBRARY_DIRS "${BOOST_ROOT}/lib")
-endif (Boost_NO_SYSTEM_PATHS)
-
-find_package(Boost 1.87 COMPONENTS filesystem)
-
-if(BOOST_FOUND)
-  include_directories(${Boost_INCLUDE_DIRS})    
-    target_link_libraries(${TARGET} ${Boost_LIBRARIES})
-endif(BOOST_FOUND)
-
 set(SOURCES 
 "src/MyApp.h"
 "src/MyApp.cpp"
@@ -46,5 +28,16 @@ message("Linking DataStructures Library to the = ${TARGET}")
 
 target_link_libraries(${TARGET} DataStructures)
 message("Linking DataStructures Library finished.")
+
+message("Searching for required boost packages...")
+
+set(Boost_LIB_PREFIX "lib")
+
+find_package(Boost 1.87.0 REQUIRED COMPONENTS filesystem)
+
+if(Boost_FOUND)
+  target_include_directories(${TARGET} ${Boost_INCLUDE_DIRS})
+  target_link_libraries(${TARGET} SHARED ${Boost_LIBRARIES})
+endif(Boost_FOUND)
 
 add_app("${SOURCES}")
