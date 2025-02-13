@@ -8,5 +8,7 @@ The following directory should be added to linker library paths:
 
     C:\Users\Administrator\Projects\C++\AddLibs\boost_1_87_0\stage\lib
 
+    C:\Users\Administrator\Projects\C++\AddLibs\boost_1_87_0\stage\lib - for CMake
+
 Link to properly boost linking:
 https://stackoverflow.com/questions/6646405/how-do-you-add-boost-libraries-in-cmakelists-txt
