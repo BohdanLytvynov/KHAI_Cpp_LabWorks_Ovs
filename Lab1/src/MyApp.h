@@ -64,6 +64,9 @@ private:
     void AllocateInitFields();
     void DeallocateInitFields();
     int CalculatePathToSrc(const char* path, const char* stopWord, const char* delim, unsigned char delimCount, SLLCHPtr result, std::exception& error);
+    void SetPathVariables();
+    void GetLocalizationFiles(char** jsons);
+    int CalculateLocFilesCount();
 };
 
 #endif

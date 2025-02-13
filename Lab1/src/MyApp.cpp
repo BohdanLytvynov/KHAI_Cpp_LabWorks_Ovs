@@ -3,6 +3,9 @@
 #include "MyApp.h"
 #include <JavaScriptCore/JSRetainPtr.h>
 #include<boost/filesystem.hpp>
+#include"boost/range/iterator_range.hpp"
+#include<fstream>
+
 
 #define WINDOW_WIDTH  600
 #define WINDOW_HEIGHT 400
@@ -110,25 +113,60 @@ void MyApp::OnDOMReady(ultralight::View* caller,
   /// This is called when a frame's DOM has finished loading on the page.
   ///
   /// This is the best time to setup any JavaScript bindings.
-  ///
-    auto scoped_context = caller->LockJSContext();
-    JSContextRef ctx = (*scoped_context);
-    JSRetainPtr<JSStringRef> str = adopt(JSStringCreateWithUTF8CString("setLocalizationFiles"));
-    JSValueRef func = JSEvaluateScript(ctx, str.get(), 0, 0, 0, 0);
+    int loc_count = CalculateLocFilesCount();
+    if (loc_count > 0)
+    {        
+        auto scoped_context = caller->LockJSContext();
+        JSContextRef ctx = (*scoped_context);
+        JSRetainPtr<JSStringRef> str = adopt(JSStringCreateWithUTF8CString("setLocalizationFiles"));
+        JSValueRef func = JSEvaluateScript(ctx, str.get(), 0, 0, 0, 0);
 
-    if (JSValueIsObject(ctx, func))
-    {
-        JSObjectRef funcObj = JSValueToObject(ctx, func, 0);
-        if (funcObj && JSObjectIsFunction(ctx, funcObj))
+        if (JSValueIsObject(ctx, func))
         {
-            //Get all json files
+            JSObjectRef funcObj = JSValueToObject(ctx, func, 0);
+            if (funcObj && JSObjectIsFunction(ctx, funcObj))
+            {
+                char** loc_files = new char* [loc_count];
 
+                for (size_t i = 0; i < loc_count; i++)
+                {
+                    loc_files[i] = new char[1024];
+                }
 
-            JSRetainPtr<JSStringRef> msg =
-                adopt(JSStringCreateWithUTF8CString("Howdy!"));
+                GetLocalizationFiles(loc_files);
+              
+                JSRetainPtr<JSStringRef> json =
+                    adopt(JSStringCreateWithUTF8CString(loc_files[0]));
+
+                const JSValueRef args[] = { JSValueMakeString(ctx, json.get()) };
+                
+                // Count the number of arguments in the array.
+                size_t num_args = sizeof(args) / sizeof(JSValueRef*);
+
+                // Create a place to store an exception, if any
+                JSValueRef exception = 0;
+
+                // Call the ShowMessage() function with our list of arguments.
+                JSValueRef result = JSObjectCallAsFunction(ctx, funcObj, 0,
+                    num_args, args,
+                    &exception);
+
+                if (exception) {
+                    // Handle any exceptions thrown from function here.
+                }
+
+                if (result) {
+                    // Handle result (if any) here.
+                }
+
+                for (size_t i = 0; i < loc_count; i++)
+                {
+                    delete[] loc_files[i];
+                }
+            }
         }
     }
-
+    
 }
 
 void MyApp::OnChangeCursor(ultralight::View* caller,
@@ -155,6 +193,11 @@ void MyApp::AllocateInitFields()
 {
     MyApp::_juce_storage = new ds::linear_ds::single_linked_list<Juce>();    
 
+    SetPathVariables();
+}
+
+void MyApp::SetPathVariables()
+{
     std::exception error;
 
     std::unique_ptr<SLLCH> result = std::make_unique<SLLCH>();
@@ -163,15 +206,50 @@ void MyApp::AllocateInitFields()
     {
         //Write to Log smth
     }
-        
+
     _path_to_lab_folder = new char[result->length()];
     result->ToArray(_path_to_lab_folder, error);
     auto len = result->length();
     _path_to_assets = new char[len + strlen("\\assets") + 1];
     strcpy(_path_to_assets, _path_to_lab_folder);
-    strcat(_path_to_assets, "\\assets");
+    strcat(_path_to_assets, "\\assets");    
+}
 
-    
+int MyApp::CalculateLocFilesCount()
+{
+    int count = 0;
+    namespace fs = boost::filesystem;
+
+    fs::path path_to_local(_path_to_assets);
+    path_to_local.append("\\localization");
+      
+    for (auto& entry : boost::make_iterator_range(fs::directory_iterator(path_to_local), {}))
+    {
+        count++;
+    }
+
+    return count;
+}
+
+void MyApp::GetLocalizationFiles(char** jsons)
+{
+    namespace fs = boost::filesystem;
+
+    fs::path path_to_local(_path_to_assets);
+    path_to_local.append("\\localization");
+
+    fs::directory_iterator iter{ path_to_local };
+    fs::path path_to_file;
+    int i = 0;
+    for (auto& entry : boost::make_iterator_range(fs::directory_iterator(path_to_local), {}))
+    {
+        path_to_file = iter->path();
+        std::ifstream inStr;
+        inStr.open(path_to_file.c_str(), std::ifstream::in);                   
+        inStr.getline(jsons[i], strlen(jsons[i]));        
+        inStr.close();
+        ++i;
+    }
 }
 
 void MyApp::DeallocateInitFields()

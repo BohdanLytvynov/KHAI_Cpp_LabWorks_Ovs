@@ -51,7 +51,7 @@ function setLocalization(localization)
 //data - File with localization in JSON Format
 function setLocalizationFiles(locFile)
 {
-    loc_files.set(locFile["language"], locFile);
+    loc_files.set(locFile["language"], locFile);    
 }
 
 function getElementById(elemId)
