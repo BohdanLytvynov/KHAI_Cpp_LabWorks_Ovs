@@ -5,6 +5,7 @@
 #include<boost/filesystem.hpp>
 #include"boost/range/iterator_range.hpp"
 #include<fstream>
+#include"JSHelper.h"
 
 
 #define WINDOW_WIDTH  600
@@ -116,25 +117,37 @@ void MyApp::OnDOMReady(ultralight::View* caller,
     int loc_count = CalculateLocFilesCount();
     if (loc_count > 0)
     {        
-        auto scoped_context = caller->LockJSContext();
-        JSContextRef ctx = (*scoped_context);
-        JSRetainPtr<JSStringRef> str = adopt(JSStringCreateWithUTF8CString("setLocalizationFiles"));
-        JSValueRef func = JSEvaluateScript(ctx, str.get(), 0, 0, 0, 0);
+        char** loc_files = new char* [loc_count];
 
-        if (JSValueIsObject(ctx, func))
+        for (size_t i = 0; i < loc_count; i++)
         {
-            JSObjectRef funcObj = JSValueToObject(ctx, func, 0);
-            if (funcObj && JSObjectIsFunction(ctx, funcObj))
+            loc_files[i] = new char[1024];
+        }
+
+        GetLocalizationFiles(loc_files);
+
+        JSValueRef* exception;
+
+        JSHelper::CallJSFunction(caller, "setLocalizationFiles", [loc_files, loc_count, caller](JSValueRef* args, size_t& arg_nums)->void {
+            
+            JSStringRef* array = new JSStringRef[loc_count];
+
+            for (size_t i = 0; i < loc_count; i++)
             {
-                char** loc_files = new char* [loc_count];
+                JSRetainPtr<JSStringRef> json = adopt(JSStringCreateWithUTF8CString(loc_files[i]));
 
-                for (size_t i = 0; i < loc_count; i++)
-                {
-                    loc_files[i] = new char[1024];
-                }
+                array[i] = json.get();
+            }
 
-                GetLocalizationFiles(loc_files);
-              
+            JSObjectMakeArray(*caller->LockJSContext(), loc_count, array, );
+
+        }, exception);
+
+        for (size_t i = 0; i < loc_count; i++)
+        {
+            delete[] loc_files[i];
+        }
+                                                    
                 JSRetainPtr<JSStringRef> json =
                     adopt(JSStringCreateWithUTF8CString(loc_files[0]));
 
@@ -144,27 +157,7 @@ void MyApp::OnDOMReady(ultralight::View* caller,
                 size_t num_args = sizeof(args) / sizeof(JSValueRef*);
 
                 // Create a place to store an exception, if any
-                JSValueRef exception = 0;
-
-                // Call the ShowMessage() function with our list of arguments.
-                JSValueRef result = JSObjectCallAsFunction(ctx, funcObj, 0,
-                    num_args, args,
-                    &exception);
-
-                if (exception) {
-                    // Handle any exceptions thrown from function here.
-                }
-
-                if (result) {
-                    // Handle result (if any) here.
-                }
-
-                for (size_t i = 0; i < loc_count; i++)
-                {
-                    delete[] loc_files[i];
-                }
-            }
-        }
+                JSValueRef exception = 0;                                     
     }
     
 }

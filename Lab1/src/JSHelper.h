@@ -8,7 +8,7 @@
 
 struct JSHelper
 {
-	JSValueRef CallJSFunction(
+	static JSValueRef CallJSFunction(
 		ultralight::View* caller,
 		const char* JSfuncName,
 		std::function<void(JSValueRef*, size_t&)> buildArgs,
