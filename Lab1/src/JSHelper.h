@@ -5,15 +5,18 @@
 #include <functional>
 
 #define JSHELPER_H
-
-struct JSHelper
+namespace js_interop
 {
-	static JSValueRef CallJSFunction(
-		ultralight::View* caller,
-		const char* JSfuncName,
-		std::function<void(JSValueRef*, size_t&)> buildArgs,
-		JSValueRef* exception);
-};
+	struct JSHelper
+	{
+		static JSValueRef CallJSFunction(
+			JSContextRef ctx,
+			const char* JSfuncName,
+			std::function<void(JSObjectRef&, size_t&)> buildArgs,
+			JSValueRef* exception);
+	};
+
+}
 
 #endif
 

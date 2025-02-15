@@ -52,10 +52,15 @@ public:
     virtual void OnChangeTitle(ultralight::View* caller,
         const String& title) override;
 
+    virtual RefPtr<View> OnCreateInspectorView(ultralight::View* caller, bool is_local,
+        const String& inspected_url) override;
+
 protected:
     RefPtr<App> app_;
     RefPtr<Window> window_;
+    RefPtr<Window> _inspector_window;
     RefPtr<Overlay> overlay_;
+    RefPtr<Overlay> inspector_overlay_;
 private:
     ds::linear_ds::single_linked_list<Juce>* _juce_storage;
     char* _path_to_lab_folder;

@@ -9,6 +9,8 @@ set(SOURCES
 "src/main.cpp"
 "src/Juce.cpp"
 "src/Juce.h"
+"src/JSHelper.h"
+"src/JSHelper.cpp"
 )
 
 add_app("${SOURCES}")

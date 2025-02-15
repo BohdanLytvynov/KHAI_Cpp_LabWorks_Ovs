@@ -1,14 +1,12 @@
 #include "JSHelper.h"
 
-JSValueRef JSHelper::CallJSFunction(
-	ultralight::View* caller,
+JSValueRef js_interop::JSHelper::CallJSFunction(
+	JSContextRef ctx,
 	const char* JSfuncName,
-	std::function<void(JSValueRef*, size_t&)> buildArgs,
+	std::function<void(JSObjectRef&, size_t&)> buildArgs,
 	JSValueRef* exception)
 {
-	JSValueRef result = 0;
-	//Get and Lock JS context
-	JSContextRef ctx = (*caller->LockJSContext());
+	JSValueRef result = 0;	
 	//Convert the func name represented as a char pointer to JSUTF8String
 	JSRetainPtr<JSStringRef> str = adopt(JSStringCreateWithUTF8CString(JSfuncName));
 	//Check the JS Script
@@ -21,15 +19,15 @@ JSValueRef JSHelper::CallJSFunction(
 		//Check wether funcObj is not nullptr and it is the JS function
 		if (funcObj != nullptr && JSObjectIsFunction(ctx, funcObj))
 		{
-			JSValueRef* args = nullptr;
+			JSObjectRef args;
 
 			size_t num_args = 0;
 
 			buildArgs(args, num_args);
 
 			result = JSObjectCallAsFunction(ctx, funcObj, 0,
-				num_args, args,
-				exception);
+				num_args, &args,
+				exception);				
 		}
 	}
 

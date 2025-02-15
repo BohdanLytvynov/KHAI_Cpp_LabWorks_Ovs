@@ -8,7 +8,7 @@
 #include"JSHelper.h"
 
 
-#define WINDOW_WIDTH  600
+#define WINDOW_WIDTH  800
 #define WINDOW_HEIGHT 400
 
 MyApp::MyApp() {
@@ -34,7 +34,7 @@ MyApp::MyApp() {
   /// Force a call to OnResize to perform size/layout of our overlay.
   ///
   OnResize(window_.get(), window_->width(), window_->height());
-
+  
   ///
   /// Load a page into our overlay's View
   ///
@@ -62,7 +62,9 @@ MyApp::MyApp() {
   /// Register our MyApp instance as a ViewListener so we can handle the
   /// View's OnChangeCursor and OnChangeTitle events below.
   ///
-  overlay_->view()->set_view_listener(this);
+  overlay_->view()->set_view_listener(this);  
+  
+  overlay_->view()->CreateLocalInspectorView();
 
   //Allocate initial fields with values
   AllocateInitFields();
@@ -93,8 +95,14 @@ void MyApp::OnResize(ultralight::Window* window, uint32_t width, uint32_t height
   /// This is called whenever the window changes size (values in pixels).
   ///
   /// We resize our overlay here to take up the entire window.
-  ///
-  overlay_->Resize(width, height);
+    if (window == window_.get())
+    {
+        overlay_->Resize(width, height);
+    }
+    else if (window == _inspector_window.get())
+    {
+        inspector_overlay_->Resize(width, height);
+    }   
 }
 
 void MyApp::OnFinishLoading(ultralight::View* caller,
@@ -117,6 +125,8 @@ void MyApp::OnDOMReady(ultralight::View* caller,
     int loc_count = CalculateLocFilesCount();
     if (loc_count > 0)
     {        
+        JSContextRef ctx = (*caller->LockJSContext());
+
         char** loc_files = new char* [loc_count];
 
         for (size_t i = 0; i < loc_count; i++)
@@ -126,38 +136,47 @@ void MyApp::OnDOMReady(ultralight::View* caller,
 
         GetLocalizationFiles(loc_files);
 
-        JSValueRef* exception;
+        JSValueRef* exception = nullptr;
 
-        JSHelper::CallJSFunction(caller, "setLocalizationFiles", [loc_files, loc_count, caller](JSValueRef* args, size_t& arg_nums)->void {
+        js_interop::JSHelper::CallJSFunction(ctx, "setLocalizationFiles", [exception, ctx,loc_files, 
+            loc_count, caller](JSObjectRef& args, size_t& arg_nums)->void 
+        {            
+            JSValueRef* array = new JSValueRef[loc_count];
+            JSValueProtect(ctx, *array);
             
-            JSStringRef* array = new JSStringRef[loc_count];
-
             for (size_t i = 0; i < loc_count; i++)
             {
-                JSRetainPtr<JSStringRef> json = adopt(JSStringCreateWithUTF8CString(loc_files[i]));
+                JSStringRef str = JSStringCreateWithUTF8CString(loc_files[0]);                 
 
-                array[i] = json.get();
+                auto jsonValue = JSValueMakeString(ctx, str);
+
+                JSStringRelease(str);
+
+                array[i] = jsonValue;
             }
 
-            JSObjectMakeArray(*caller->LockJSContext(), loc_count, array, );
+            JSObjectRef jsArray = JSObjectMakeArray(*caller->LockJSContext(), 
+                loc_count, array, exception);
+
+            JSValueUnprotect(ctx, *array);
+
+            delete[] array;
+
+            args = jsArray;
+
+            arg_nums = sizeof(jsArray) / sizeof(JSObjectRef*);
 
         }, exception);
+
+        if (exception != nullptr)
+        {
+            auto p = exception;
+        }
 
         for (size_t i = 0; i < loc_count; i++)
         {
             delete[] loc_files[i];
-        }
-                                                    
-                JSRetainPtr<JSStringRef> json =
-                    adopt(JSStringCreateWithUTF8CString(loc_files[0]));
-
-                const JSValueRef args[] = { JSValueMakeString(ctx, json.get()) };
-                
-                // Count the number of arguments in the array.
-                size_t num_args = sizeof(args) / sizeof(JSValueRef*);
-
-                // Create a place to store an exception, if any
-                JSValueRef exception = 0;                                     
+        }                                                                                      
     }
     
 }
@@ -180,6 +199,25 @@ void MyApp::OnChangeTitle(ultralight::View* caller,
   /// We update the main window's title here.
   ///
   window_->SetTitle(title.utf8().data());
+}
+
+RefPtr<View> MyApp::OnCreateInspectorView(ultralight::View* caller, bool is_local,
+    const String& inspected_url)
+{
+    if (inspector_overlay_)
+        return nullptr;
+    _inspector_window = Window::Create(app_->main_monitor(), WINDOW_WIDTH, WINDOW_HEIGHT,
+        false, kWindowFlags_Titled | kWindowFlags_Resizable);
+
+    inspector_overlay_ = Overlay::Create(_inspector_window, 1, 1, 0, 0);
+    
+    OnResize(_inspector_window.get(), _inspector_window->width(), _inspector_window->height());
+   
+    inspector_overlay_->Show();
+
+    _inspector_window->set_listener(this);
+    
+    return inspector_overlay_->view();    
 }
 
 void MyApp::AllocateInitFields()
