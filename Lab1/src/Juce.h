@@ -17,6 +17,8 @@ private:
 	char* _name;
 	char* _manufacturer;
 	float _volume;
+	int _id;
+	static int _id_g;
 };
 
 #endif // !JUCE_H

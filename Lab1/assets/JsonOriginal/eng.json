@@ -2,7 +2,8 @@
     "language":"English",
     "main-page":
     {        
-        "title":"Lab Work 1",        
+        "title":"Lab Work 1",
+        "langs-select":"Select the language you want please:",        
         "langs":[            
             { "disp-name":"English", "value":"English"},
             { "disp-name":"Ukrainian", "value":"Ukrainian" }
@@ -18,10 +19,20 @@
     },
     "add-offcanv":
     {
-
+        "juce-name-label":"Enter Juce Name:",
+        "juce-manufacturer-label":"Enter Juce Manufacturer:",
+        "juce-volume-label":"Enter Juce volume:",
+        "add-juce-btn":"Add",
+        "clear-juce-btn":"Clear",
+        "back-to-main-btn":"Back"
     },
     "edit-offcanv":
     {
-
+        "juce-name-label-edit":"Edit Juce Name:",
+        "juce-manufacturer-label-edit":"Edit Juce Manufacturer:",
+        "juce-volume-label-edit":"Edit Juce volume:",
+        "save-juce-btn-edit":"Save",
+        "clear-juce-btn-edit":"Clear",
+        "back-to-main-btn-edit":"Back"
     }    
 }

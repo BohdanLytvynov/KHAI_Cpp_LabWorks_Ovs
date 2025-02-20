@@ -2,11 +2,13 @@
     "language":"Ukrainian",
     "main-page":
     {        
-        "title":"Лабораторна робота 1",
-        "langs":[
-            "English", "Ukrainian"
+        "title":"Лабораторна робота номер 1",
+        "langs-select":"Виберіть мову, яку ви бажаєте:",        
+        "langs":[            
+            { "disp-name":"English", "value":"Англійська"},
+            { "disp-name":"Ukrainian", "value":"Українська" }
         ],
-        "description":"Це наше сховище соків. Ви можете використовувати його для зберігання своїх соків. Використовуйте кнопкиЖ Додати, Редагувати, Видалити для маніпулювання данними",
+        "description":"Це наше сховище соків. Ви можете додавати, редагувати та видаляти соки використовуючи відповідні кнопки знизу.",
         "lv-title":"Список соків:",
         "buttons":
         {
@@ -17,10 +19,20 @@
     },
     "add-offcanv":
     {
-
+        "juce-name-label":"Введіть назву сока:",
+        "juce-manufacturer-label":"Введіть назву виробника сока:",
+        "juce-volume-label":"введіть об'єм сока:",
+        "add-juce-btn":"Додати",
+        "clear-juce-btn":"Очистити",
+        "back-to-main-btn":"Назад"
     },
     "edit-offcanv":
     {
-
+        "juce-name-label-edit":"Редагувати назву сока:",
+        "juce-manufacturer-label-edit":"Редагувати виробника сока:",
+        "juce-volume-label-edit":"Редагувати об'єм сока:",
+        "save-juce-btn-edit":"Зберегти",
+        "clear-juce-btn-edit":"Очистити",
+        "back-to-main-btn-edit":"Назад"
     }    
 }

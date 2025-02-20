@@ -72,6 +72,7 @@ MyApp::MyApp() {
 
 MyApp::~MyApp() {
     DeallocateInitFields();
+    UnsubscribeEvents();
 }
 
 void MyApp::Run() {
@@ -131,11 +132,11 @@ void MyApp::OnDOMReady(ultralight::View* caller,
 
         for (size_t i = 0; i < loc_count; i++)
         {
-            loc_files[i] = new char[1024];
+            loc_files[i] = new char[2048];
         }
 
         GetLocalizationFiles(loc_files);
-
+       
         JSValueRef* exception = nullptr;
 
         js_interop::JSHelper::CallJSFunction(ctx, "setLocalizationFiles", [exception, ctx,loc_files, 
@@ -146,11 +147,11 @@ void MyApp::OnDOMReady(ultralight::View* caller,
             
             for (size_t i = 0; i < loc_count; i++)
             {
-                JSStringRef str = JSStringCreateWithUTF8CString(loc_files[0]);                 
-
-                auto jsonValue = JSValueMakeString(ctx, str);
-
+                JSStringRef str = JSStringCreateWithUTF8CString(loc_files[i]);                                 
+                auto jsonValue = JSValueMakeString(ctx, str);                                
                 JSStringRelease(str);
+
+                auto f = loc_files[i];
 
                 array[i] = jsonValue;
             }
@@ -208,7 +209,7 @@ RefPtr<View> MyApp::OnCreateInspectorView(ultralight::View* caller, bool is_loca
         return nullptr;
     _inspector_window = Window::Create(app_->main_monitor(), WINDOW_WIDTH, WINDOW_HEIGHT,
         false, kWindowFlags_Titled | kWindowFlags_Resizable);
-
+    _inspector_window->SetTitle("Inspector for Lab1 window");
     inspector_overlay_ = Overlay::Create(_inspector_window, 1, 1, 0, 0);
     
     OnResize(_inspector_window.get(), _inspector_window->width(), _inspector_window->height());
@@ -269,18 +270,16 @@ void MyApp::GetLocalizationFiles(char** jsons)
     fs::path path_to_local(_path_to_assets);
     path_to_local.append("\\localization");
 
-    fs::directory_iterator iter{ path_to_local };
-    fs::path path_to_file;
+    fs::directory_iterator iter{ path_to_local };    
     int i = 0;
     for (auto& entry : boost::make_iterator_range(fs::directory_iterator(path_to_local), {}))
-    {
-        path_to_file = iter->path();
+    {                
         std::ifstream inStr;
-        inStr.open(path_to_file.c_str(), std::ifstream::in);                   
+        inStr.open(entry.path().c_str(), std::ifstream::in);
         inStr.getline(jsons[i], strlen(jsons[i]));        
         inStr.close();
         ++i;
-    }
+    }    
 }
 
 void MyApp::DeallocateInitFields()
@@ -288,6 +287,16 @@ void MyApp::DeallocateInitFields()
     delete _juce_storage;
     delete[] _path_to_lab_folder;
     delete[] _path_to_assets;
+}
+
+void MyApp::UnsubscribeEvents()
+{    
+    window_->set_listener(nullptr);
+    _inspector_window->set_listener(nullptr);
+    app_->set_listener(nullptr);
+    auto v = overlay_->view();
+    v->set_load_listener(nullptr);
+    v->set_view_listener(nullptr);    
 }
 
 int MyApp::CalculatePathToSrc(

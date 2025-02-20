@@ -10,6 +10,7 @@ Juce::Juce(char* name, char* manufacturer, float volume)
 	_name = name;
 	_manufacturer = manufacturer;
 	_volume = volume;
+	_id = _id_g++;	
 }
 
 char* Juce::getName()
@@ -26,3 +27,5 @@ float& Juce::getValume()
 {
 	return _volume;
 }
+
+int Juce::_id_g = 0;

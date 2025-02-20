@@ -5,11 +5,74 @@
     <link rel="stylesheet" href="../css/bootstrap/bootstrap.min.css">
   </head>
   <body>
-      
-    <select id="langs" >        
-    </select>
-            
-    <!-- <div class="container-fluid"> 
+
+    <!-- Off Canvas for adding -->
+     <div class="offcanvas offcanvas-start" id="add-offcanv">      
+      <div class="container-fluid">
+        <div class="mb-3">
+          <label for="juce-name" class="form-label" id="juce-name-label"></label>
+          <input type="text" class="form-control" id="juce-name">
+        </div>
+        <div class="mb-3">
+          <label for="juce-manufacturer" class="form-label" id="juce-manufacturer-label"></label>
+          <input type="text" class="form-control" id="juce-manufacturer">
+        </div>
+        <div class="mb-3">
+          <label for="juce-volume" class="form-label" id="juce-volume-label"></label>
+          <input type="text" class="form-control" id="juce-volume">
+        </div>
+        <div class="row">
+          <div class="col-auto">
+            <button type="submit" id="add-juce-btn" class="btn btn-primary mb-3"></button>
+          </div>
+          <div class="col-auto">
+            <button type="submit" id="clear-juce-btn" class="btn btn-warning mb-3"></button>
+          </div>
+          <div class="col-auto">
+            <button type="submit" id="back-to-main-btn" class="btn btn-danger mb-3" data-bs-dismiss="offcanvas">              
+            </button>
+          </div>
+        </div>        
+      </div>
+     </div>
+
+     <!-- Off Canvas for Editing -->
+     <div class="offcanvas offcanvas-start" id="edit-offcanv">
+      <div class="container-fluid">
+        <div class="mb-3">
+          <label for="juce-name-edit" class="form-label" id="juce-name-label-edit"></label>
+          <input type="text" class="form-control" id="juce-name-edit">
+        </div>
+        <div class="mb-3">
+          <label for="juce-manufacturer-edit" class="form-label" id="juce-manufacturer-label-edit"></label>
+          <input type="text" class="form-control" id="juce-manufacturer-edit">
+        </div>
+        <div class="mb-3">
+          <label for="juce-volume-edit" class="form-label" id="juce-volume-label-edit"></label>
+          <input type="text" class="form-control" id="juce-volume-edit">
+        </div>
+        <div class="row">
+          <div class="col-auto">
+            <button type="submit" id="save-juce-btn-edit" class="btn btn-primary mb-3"></button>
+          </div>
+          <div class="col-auto">
+            <button type="submit" id="clear-juce-btn-edit" class="btn btn-warning mb-3"></button>
+          </div>
+          <div class="col-auto">
+            <button type="submit" id="back-to-main-btn-edit" class="btn btn-danger mb-3" 
+            data-bs-dismiss="offcanvas"></button>
+          </div>
+        </div>        
+      </div>
+     </div>
+
+    <div class="d-inline-flex">
+      <label for="langs" id="sel-label"></label>
+      <select class="form-select" name="langs" id="langs">      
+      </select>
+    </div>
+                
+    <div class="container-fluid"> 
       <p id="description">        
       </p>  
       <p id="lv-title"></p>                         
@@ -23,19 +86,21 @@
         </div>
         <div class="col-sm-2">          
             <div class="btn-group-vertical">            
-              <button type="button" class="btn btn-primary buttons-mr" id="add-btn">               
+              <button type="button" class="btn btn-primary buttons-mr" id="add-btn" 
+              data-bs-toggle="offcanvas" data-bs-target="#add-offcanv">               
               </button>
-              <button type="button" class="btn btn-warning buttons-mr" id="edit-btn">                
+              <button type="button" class="btn btn-warning buttons-mr" id="edit-btn"
+              data-bs-toggle="offcanvas" data-bs-target="#edit-offcanv">                
               </button>
               <button type="button" class="btn btn-danger buttons-mr" id="del-btn">                
               </button>
             </div>         
         </div>
       </div>
-    </div> -->
+    </div>
 
   </body>
-  <script type="text/javascript" src="../js/bootstrap/bootstrap.bundle.min.js"></script>
-  <script type="text/javascript" src="../js/app.js"></script>
+  <script type="text/javascript" src="../js/bootstrap/bootstrap.bundle.min.js"></script>  
+  <script type="text/javascript" src="../js/app.js"></script>  
 </html>
 
