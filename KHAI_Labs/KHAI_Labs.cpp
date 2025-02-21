@@ -1,20 +1,24 @@
 
-
-
 #include <iostream>
-#include<crtdbg.h>
+#include <crtdbg.h>
 #include"../DataStructures/data_structures.h"
+#include"../ConsoleColors/console_colors.h"
+#include"../ConsoleUI/console_ui.h"
+
+void ExecCommand(const char* command)
+{
+    FILE* fd = _popen(command, "r");
+}
 
 int main()
 {
+    //ExecCommand("chcp 1251");
+
     int flag = _CrtSetDbgFlag(_CRTDBG_REPORT_FLAG);
     flag |= _CRTDBG_LEAK_CHECK_DF;
     _CrtSetDbgFlag(flag);
 
-    using namespace ds;
-    using namespace std;
-   
-    std::unique_ptr<ds::linear_ds::single_linked_list<int>> intsS = std::make_unique<ds::linear_ds::single_linked_list<int>>();
+
 }
 
 
