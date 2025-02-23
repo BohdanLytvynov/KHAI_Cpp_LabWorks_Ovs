@@ -279,11 +279,11 @@ namespace io
     };     
 }
 
-COORD Build_COORD(int x, int y);
+COORD CONSOLE_IO_API Build_COORD(int x, int y);
 
-COORD operator + (COORD l, COORD r);
+COORD CONSOLE_IO_API operator + (COORD l, COORD r);
 
-COORD operator - (COORD l, COORD r);
+COORD CONSOLE_IO_API operator - (COORD l, COORD r);
 
 #endif // !CONSOLE_IO_H
 

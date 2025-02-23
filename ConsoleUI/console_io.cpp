@@ -38,9 +38,9 @@ io::ConsoleInputOutput::ConsoleInputOutput(HANDLE console, WORD defErrorForegrou
 void io::ConsoleInputOutput::PrintLine(LPCTSTR value)
 {
 #ifdef _UNICODE
-	std::wcout << value << std::endl;
+	std::wcout << *value << std::endl;
 #else //Prj builds using ASCII
-	std::cout << value << std::endl;
+	std::cout << *value << std::endl;
 #endif
 }
 
@@ -48,9 +48,9 @@ void io::ConsoleInputOutput::PrintLine(LPCTSTR value, WORD color)
 {
 	SetConsoleTextAttribute(m_consoleHandle, color);
 #ifdef _UNICODE
-	std::wcout << value << std::endl;
+	std::wcout << *value << std::endl;
 #else //Prj builds using ASCII
-	std::cout << value << std::endl;
+	std::cout << *value << std::endl;
 #endif
 	SetConsoleTextAttribute(m_consoleHandle, m_def_foreground | m_def_background);
 }
@@ -58,7 +58,7 @@ void io::ConsoleInputOutput::PrintLine(LPCTSTR value, WORD color)
 void io::ConsoleInputOutput::PrintLine(const char* value, WORD color)
 {
 	SetConsoleTextAttribute(m_consoleHandle, color);
-	std::cout << value << std::endl;
+	std::cout << *value << std::endl;
 	SetConsoleTextAttribute(m_consoleHandle, m_def_foreground | m_def_background);
 }
 
@@ -97,7 +97,7 @@ void io::ConsoleInputOutput::ReadLine(LPTSTR value, size_t length)
 
 void io::ConsoleInputOutput::PrintLine(const char* value)
 {
-	std::cout << value << std::endl;
+	std::cout << *value << std::endl;
 }
 
 void io::ConsoleInputOutput::ReadLine(char* value, size_t length)

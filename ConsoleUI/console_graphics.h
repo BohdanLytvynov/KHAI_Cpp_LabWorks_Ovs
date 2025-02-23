@@ -1,7 +1,12 @@
 
 #ifndef CONSOLE_GRAPHICS_H
 
-#pragma region Exporter 
+#define CONSOLE_GRAPHICS_H
+
+#include"../ConsoleUI/console_io.h"
+#include"../ConsoleUI/Shapes.h"
+
+#pragma region Exporter    
 
 #ifdef CONSOLE_GRAPHICS_EXPORT
 
@@ -17,17 +22,18 @@
 
 namespace graphics
 {
+    typedef io::ConsoleInputOutput console_IO;
     /// <summary>
     /// Class that is used to use console graphics functions
     /// </summary>
     struct CONSOLE_GRAPHICS_API ConsoleGraphics
     {
-        ConsoleGraphics(HANDLE consoleHandler);
+        ConsoleGraphics(console_IO* IO);
 
-        void Draw();
+        void Draw(shapes::Shape* shape, COORD position);
 
     private:
-        HANDLE _consoleHandler;//Pointer to the console
+        console_IO* m_console_IO;
     };
 }
 

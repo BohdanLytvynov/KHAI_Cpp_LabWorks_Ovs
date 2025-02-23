@@ -139,15 +139,16 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="UIElements.h" />
     <ClInclude Include="console_ui.h" />
     <ClInclude Include="console_graphics.h" />
     <ClInclude Include="console_io.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="pch.h" />
-    <ClInclude Include="Rectangle.h" />
-    <ClInclude Include="Shape.h" />
+    <ClInclude Include="Shapes.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="UIElements.cpp" />
     <ClCompile Include="console_ui.cpp" />
     <ClCompile Include="console_graphics.cpp" />
     <ClCompile Include="console_io.cpp" />
@@ -158,8 +159,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="Rectangle.cpp" />
-    <ClCompile Include="Shape.cpp" />
+    <ClCompile Include="Shapes.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

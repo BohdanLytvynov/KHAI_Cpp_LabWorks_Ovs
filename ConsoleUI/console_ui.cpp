@@ -6,7 +6,7 @@ ui::ConsoleUI::ConsoleUI(HANDLE consoleHandler,
 	g::ConsoleGraphics* consoleGraphicsModule)
 {
 	_consoleHandler = consoleHandler;
-	if (!inputModule)
+	if (inputModule == nullptr)
 	{
 		_inputModule = new io::ConsoleInputOutput(consoleHandler);
 		_inpModuleDefUsed = true;
@@ -17,13 +17,14 @@ ui::ConsoleUI::ConsoleUI(HANDLE consoleHandler,
 		_inpModuleDefUsed = false;
 	}
 	
-	if (consoleGraphicsModule)
-	{
-		_consoleGraphicsModule = consoleGraphicsModule;
+	if (consoleGraphicsModule == nullptr)
+	{ 
+		_consoleGraphicsModule = new graphics::ConsoleGraphics(_inputModule);
 		_graphModuleDefaultUsed = true;
 	}
 	else
 	{
+		_consoleGraphicsModule = consoleGraphicsModule;
 		_graphModuleDefaultUsed = false;
 	}
 	
@@ -45,5 +46,21 @@ void ui::ConsoleUI::Print(LPTSTR value)
 void ui::ConsoleUI::ReadLine(LPTSTR value, size_t size)
 {
 	_inputModule->ReadLine(value, size);
+}
+
+void ui::ConsoleUI::DrawView()
+{
+	for (auto& v : m_views)
+	{
+		v->Draw(_consoleGraphicsModule, v->getPosition());
+	}
+}
+
+void ui::ConsoleUI::RegisterView(ui_controls::View* view)
+{
+	if (view == nullptr)
+		throw std::exception("Parameter element was nullptr!");
+
+	m_views.push_back(view);
 }
 

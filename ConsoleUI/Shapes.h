@@ -3,28 +3,38 @@
 
 #define SHAPE_H
 
+#pragma region EXPORTER
+
+#ifdef SHAPES_EXPORRT
+#define SHAPES_API __declspec(dllexport)
+#else
+#define SHAPES_API __declspec(dllexport)
+#endif
+
+#pragma endregion
+
 #include"../ConsoleUI/console_io.h"
 
 typedef io::ConsoleInputOutput console_IO;
 typedef unsigned int uint;
 
-namespace shapes_base
+namespace shapes
 {	
 	struct Shape
 	{
-		Shape(COORD coord, uint width, uint height, 			
+		Shape(uint width, uint height, 			
 			WORD borderForegroundColor,
 			WORD borderBackgroundColor,			
 			WORD fillForegroundColor,
 			WORD fillBackgroundColor,
-			const char* fillSymbols = nullptr, 
-			const char* borderSymbols = nullptr
+			char* fillSymbols = nullptr, 
+			char* borderSymbols = nullptr
 			);
 
-		virtual void Draw(console_IO* IO) = 0;
+		virtual void Draw(console_IO* IO, COORD coord) = 0;
 
-		COORD& getCOORD();
-
+		~Shape();
+				
 		uint getWidth();
 		uint getHeight();
 
@@ -35,10 +45,12 @@ namespace shapes_base
 		char*& getFillSymbols();
 		WORD& getFillBackgroundColor();
 		WORD& getFillForegroundColor();
-	private:
-		//Location of the shape				
-		COORD m_coord;
-
+		
+	protected:
+		bool m_defborderSymblUsed;
+		bool m_deffillSymblUsed;
+		
+	private:		
 		//Size of the shape
 		uint m_width;
 		uint m_height;
@@ -52,6 +64,21 @@ namespace shapes_base
 		char* m_fillSymbols;
 		WORD m_FillBackgroundColor;
 		WORD m_FillForegroundColor;
+	};
+
+	struct Rectangle : public Shape
+	{
+		SHAPES_API Rectangle(uint width, uint height,
+			WORD borderForegroundColor,
+			WORD borderBackgroundColor,
+			WORD fillForegroundColor,
+			WORD fillBackgroundColor,
+			char* fillSymbols = nullptr,
+			char* borderSymbols = nullptr);
+
+		SHAPES_API ~Rectangle();
+
+		void Draw(console_IO* IO, COORD coord) override;
 	};
 }
 
