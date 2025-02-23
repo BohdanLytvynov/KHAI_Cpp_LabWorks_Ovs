@@ -16,27 +16,84 @@
 #include"../ConsoleUI/Shapes.h"
 #include"../ConsoleUI/console_graphics.h"
 #include<vector>
+#include "framework.h"
 
 namespace ui_controls
 {
+	template<class TContent>
+	struct ContentContainer
+	{
+		ContentContainer(TContent content, WORD contentColor)
+		{
+			m_content = content;
+			m_contentColor = contentColor;
+		}
+
+		TContent& getContent()
+		{
+			return m_content;
+		}
+
+		WORD& getContentColor()
+		{
+			return m_contentColor;
+		}
+	private:
+		TContent m_content;
+		WORD m_contentColor;
+	};
+
 	struct UIElement;
 
 	typedef void (*callback)(UIElement* elem);
+	
+	struct Selectable
+	{
+		Selectable(callback& onSelected, 
+			callback& onUnSelect, 
+			shapes::Shape* slecetShape = nullptr);
+
+		void virtual Select();
+
+		void virtual UnSelect();
+
+		bool IsSelected();
+
+		callback& getSelectCallBack();
+		callback& getUnselectCallback();
+
+		shapes::Shape*& getSelectShape();
+
+	private:
+		bool m_selected;
+		callback m_onSelected;
+		callback m_unSelect;
+		shapes::Shape* m_selectShape;
+	};
 
 	struct Focusable
 	{	
-		void virtual Focus() = 0;
+		Focusable(callback& onFocusCallback, 
+			callback& onUnfocus, 
+			shapes::Shape* focusShape = nullptr);
 
-		void virtual UnFocus() = 0;
+		void virtual Focus();
+
+		void virtual UnFocus();
 
 		bool IsFocused();
 
-		callback& getCallback();
+		callback& getFocusCallback();
+
+		callback& getUnFocusCallback();
+
+		shapes::Shape*& getFocusShape();
 
 	private:
 		bool m_focus;
 		callback m_onFocus;
-		shapes::Shape* m_focusShape;//We will replace the current shape with this.
+		callback m_onUnFocus;
+		shapes::Shape* m_focusShape;//We will replace the current shape with this.	
 	};
 
 	struct UIElement
@@ -45,17 +102,30 @@ namespace ui_controls
 
 		shapes::Shape*& getShape();			
 		COORD& getPosition();
+		COORD& getActualPosition();
 
 		virtual void Draw(graphics::ConsoleGraphics* graphics, COORD position) = 0;
 
 	private:
 		COORD m_position;
+		COORD m_actualPosition;
 		shapes::Shape* m_shape;		
 	};
 	
-	struct UI_CONTROLS_API Button : public UIElement, public Focusable
-	{
-		char*& getContent();	
+	struct Button : 
+		public UIElement, 
+		public Focusable, 
+		public Selectable,
+		public ContentContainer<LPTSTR>
+	{		
+		Button(shapes::Shape* shapeOfButton, COORD position,
+			LPTSTR content, WORD contentColor,
+			callback& onSelected,
+			callback& onUnSelect,
+			callback& onFocusCallback,
+			callback& onUnFocusCallback,
+			shapes::Shape* focusShape = nullptr,  
+			shapes::Shape* slecetShape = nullptr);
 
 		void Draw(graphics::ConsoleGraphics* graphics, COORD position) override;
 
@@ -63,16 +133,26 @@ namespace ui_controls
 
 		void UnFocus() override;
 
+		void Select() override;
+
+		void UnSelect() override;
+
 	private:
-		char* m_content;		
+		void DrawButtonWithContent(graphics::ConsoleGraphics* graphics,
+			COORD position, shapes::Shape* shapeToDraw);
 	};
 
 	struct UI_CONTROLS_API View : public UIElement
 	{
+		View(const char* name, shapes::Shape* shape, COORD position);
+
 		void Draw(graphics::ConsoleGraphics* graphics, COORD position) override;
 
+		const char* getName();
+
 	private:
-		std::vector<UIElement*> m_ui_elements;		
+		std::vector<UIElement*> m_ui_elements;	
+		const char* m_name;
 	};
 }
 

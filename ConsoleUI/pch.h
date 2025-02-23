@@ -11,4 +11,5 @@
 #include "framework.h"
 #include <iostream>
 #include <vector>
+#include <sstream>
 #endif //PCH_H

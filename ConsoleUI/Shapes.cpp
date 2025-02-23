@@ -7,9 +7,9 @@ shapes::Shape::Shape(
 	WORD borderBackgroundColor,
 	WORD fillForegroundColor,
 	WORD fillBackgroundColor,
+	const char* codepage,
 	char* fillSymbols,
-	char* borderSymbols
-	)
+	char* borderSymbols)
 {	
 	m_width = width;
 	m_height = height;
@@ -19,6 +19,7 @@ shapes::Shape::Shape(
 	m_FillBackgroundColor = fillBackgroundColor;
 	m_fillSymbols = fillSymbols;
 	m_borderSymbols = borderSymbols;
+	m_codePage = codepage;
 }
 
 shapes::Shape::~Shape()
@@ -62,6 +63,11 @@ WORD& shapes::Shape::getFillForegroundColor()
 	return m_FillForegroundColor;
 }
 
+const char* shapes::Shape::getCodePage()
+{
+	return m_codePage;
+}
+
 WORD& shapes::Shape::getFillBackgroundColor()
 {
 	return m_FillBackgroundColor;
@@ -83,6 +89,7 @@ shapes::Rectangle::Rectangle(
 	WORD borderBackgroundColor,
 	WORD fillForegroundColor,
 	WORD fillBackgroundColor,
+	const char* codepage,
 	char* fillSymbols,
 	char* borderSymbols)
 	:Shape(width, height,
@@ -136,7 +143,15 @@ shapes::Rectangle::~Rectangle()
 }
 
 void shapes::Rectangle::Draw(console_IO* IO, COORD pos)
-{
+{	
+	const char* command = "chcp ";
+	size_t count = std::strlen(command) + std::strlen(Shape::getCodePage());
+	char* result = new char[count];
+
+	IO->Combine(result, count, 2, command, Shape::getCodePage());
+
+	IO->Execute(result);
+
 	uint height = Shape::getHeight();
 
 	uint width = Shape::getWidth();

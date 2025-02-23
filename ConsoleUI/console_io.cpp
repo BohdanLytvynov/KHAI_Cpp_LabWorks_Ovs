@@ -64,25 +64,25 @@ void io::ConsoleInputOutput::PrintLine(const char* value, WORD color)
 
 void io::ConsoleInputOutput::Print(LPCTSTR value, COORD coord)
 {
-	SetConsoleCursorPosition(m_consoleHandle, coord);
+	SetCursorPosition(coord);
 	PrintLine(value);
 }
 
 void io::ConsoleInputOutput::Print(const char* value, COORD coord)
 {
-	SetConsoleCursorPosition(m_consoleHandle, coord);
+	SetCursorPosition(coord);
 	PrintLine(value);
 }
 
 void io::ConsoleInputOutput::Print(LPCTSTR value, COORD coord, WORD color)
 {
-	SetConsoleCursorPosition(m_consoleHandle, coord);
+	SetCursorPosition(coord);
 	PrintLine(value, color);
 }
 
 void io::ConsoleInputOutput::Print(const char* value, COORD coord, WORD color)
 {
-	SetConsoleCursorPosition(m_consoleHandle, coord);
+	SetCursorPosition(coord);
 	PrintLine(value, color);
 }
 
@@ -175,6 +175,27 @@ void io::ConsoleInputOutput::Execute(const char* command)
 	FILE* fd = _popen(command, "r");
 }
 
+void io::ConsoleInputOutput::SetCursorPosition(COORD cursorPosition)
+{
+	SetConsoleCursorPosition(m_consoleHandle, cursorPosition);
+}
+
+void io::ConsoleInputOutput::Combine(char*& result, size_t length, size_t paramsCount ...)
+{
+	size_t* Ptr = &paramsCount;
+
+	std::stringstream str;
+
+	for (size_t i = 1; i <= paramsCount; i++)
+	{
+		str << *(Ptr + i);
+	}
+
+	str.getline(result, length);
+
+	str.clear();
+}
+
 COORD Build_COORD(int x, int y)
 {
 	COORD cord;
@@ -186,20 +207,10 @@ COORD Build_COORD(int x, int y)
 
 COORD operator+(COORD l, COORD r)
 {
-	COORD crd;
-
-	crd.X = l.X + r.X;
-	crd.Y = l.Y + r.Y;
-
-	return crd;
+	return Build_COORD(l.X + r.X, l.Y + r.Y);
 }
 
 COORD operator-(COORD l, COORD r)
 {
-	COORD crd;
-
-	crd.X = l.X - r.X;
-	crd.Y = l.Y - r.Y;
-
-	return crd;
+	return Build_COORD(l.X - r.X, l.Y - r.Y);
 }

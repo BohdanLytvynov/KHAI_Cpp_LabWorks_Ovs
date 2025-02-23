@@ -1,33 +1,24 @@
 #include "pch.h"
 #include "console_ui.h"
 
-ui::ConsoleUI::ConsoleUI(HANDLE consoleHandler, 
-	io::ConsoleInputOutput* inputModule, 
-	g::ConsoleGraphics* consoleGraphicsModule)
+ui::ConsoleUI::ConsoleUI(HANDLE consoleHandler)
 {
 	_consoleHandler = consoleHandler;
-	if (inputModule == nullptr)
-	{
-		_inputModule = new io::ConsoleInputOutput(consoleHandler);
-		_inpModuleDefUsed = true;
-	}
-	else
-	{
-		_inputModule = inputModule;
-		_inpModuleDefUsed = false;
-	}
-	
-	if (consoleGraphicsModule == nullptr)
-	{ 
-		_consoleGraphicsModule = new graphics::ConsoleGraphics(_inputModule);
-		_graphModuleDefaultUsed = true;
-	}
-	else
-	{
-		_consoleGraphicsModule = consoleGraphicsModule;
-		_graphModuleDefaultUsed = false;
-	}
-	
+
+	_inputModule = new io::ConsoleInputOutput(consoleHandler);
+	_inpModuleDefUsed = true;
+
+	_consoleGraphicsModule = new graphics::ConsoleGraphics(_inputModule);
+	_graphModuleDefaultUsed = true;
+}
+
+ui::ConsoleUI::ConsoleUI(io::ConsoleInputOutput* io, graphics::ConsoleGraphics* g)
+{
+	this->_inputModule = io;
+	_inpModuleDefUsed = false;
+
+	this->_consoleGraphicsModule = g;
+	_graphModuleDefaultUsed = false;
 }
 
 ui::ConsoleUI::~ConsoleUI()

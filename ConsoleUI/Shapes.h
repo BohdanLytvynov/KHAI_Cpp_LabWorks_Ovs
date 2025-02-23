@@ -27,9 +27,9 @@ namespace shapes
 			WORD borderBackgroundColor,			
 			WORD fillForegroundColor,
 			WORD fillBackgroundColor,
+			const char* codepage,
 			char* fillSymbols = nullptr, 
-			char* borderSymbols = nullptr
-			);
+			char* borderSymbols = nullptr);
 
 		virtual void Draw(console_IO* IO, COORD coord) = 0;
 
@@ -46,6 +46,8 @@ namespace shapes
 		WORD& getFillBackgroundColor();
 		WORD& getFillForegroundColor();
 		
+		const char* getCodePage();
+
 	protected:
 		bool m_defborderSymblUsed;
 		bool m_deffillSymblUsed;
@@ -64,6 +66,9 @@ namespace shapes
 		char* m_fillSymbols;
 		WORD m_FillBackgroundColor;
 		WORD m_FillForegroundColor;
+
+		//CodePage name to draw this shape
+		const char* m_codePage;
 	};
 
 	struct Rectangle : public Shape
@@ -73,6 +78,7 @@ namespace shapes
 			WORD borderBackgroundColor,
 			WORD fillForegroundColor,
 			WORD fillBackgroundColor,
+			const char* codepage = "866",
 			char* fillSymbols = nullptr,
 			char* borderSymbols = nullptr);
 

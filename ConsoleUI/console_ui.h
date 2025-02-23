@@ -26,9 +26,9 @@ namespace ui
 
     struct CONSOLE_UI_API ConsoleUI
     {
-        ConsoleUI(HANDLE consoleHandler, 
-            io::ConsoleInputOutput* inputModule = nullptr, 
-            g::ConsoleGraphics* consoleGraphicsModule = nullptr);
+        ConsoleUI(HANDLE consoleHandler);
+
+        ConsoleUI(io::ConsoleInputOutput* io, graphics::ConsoleGraphics* g);
 
         ~ConsoleUI();
 

@@ -270,6 +270,10 @@ namespace io
 
         void Execute(const char* command);
 
+        void SetCursorPosition(COORD cursorPosition);
+
+        void Combine(char*& result, size_t length, size_t paramCount ...);
+
         private:
             HANDLE m_consoleHandle;//Pointer to the console
             WORD m_def_foreground;//Def foreground color for console messages

@@ -32,6 +32,8 @@ namespace graphics
 
         void Draw(shapes::Shape* shape, COORD position);
 
+        console_IO* getConsoleIOModule();
+
     private:
         console_IO* m_console_IO;
     };
