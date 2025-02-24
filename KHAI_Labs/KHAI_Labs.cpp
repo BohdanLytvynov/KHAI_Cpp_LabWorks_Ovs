@@ -34,7 +34,7 @@ int main()
 
     namespace uc = ui_controls;
 
-    uc::View view("Main", );
+    //uc::View view("Main", );
 
     delete UI;
     delete g;

@@ -6,7 +6,7 @@
 #include"boost/range/iterator_range.hpp"
 #include<fstream>
 #include"JSHelper.h"
-
+#include <AppCore/JSHelpers.h>
 
 #define WINDOW_WIDTH  800
 #define WINDOW_HEIGHT 400
@@ -123,11 +123,11 @@ void MyApp::OnDOMReady(ultralight::View* caller,
   /// This is called when a frame's DOM has finished loading on the page.
   ///
   /// This is the best time to setup any JavaScript bindings.
+    JSContextRef ctx = (*caller->LockJSContext());
+    //Setup localization
     int loc_count = CalculateLocFilesCount();
     if (loc_count > 0)
-    {        
-        JSContextRef ctx = (*caller->LockJSContext());
-
+    {                
         char** loc_files = new char* [loc_count];
 
         for (size_t i = 0; i < loc_count; i++)
@@ -141,10 +141,10 @@ void MyApp::OnDOMReady(ultralight::View* caller,
 
         js_interop::JSHelper::CallJSFunction(ctx, "setLocalizationFiles", [exception, ctx,loc_files, 
             loc_count, caller](JSObjectRef& args, size_t& arg_nums)->void 
-        {            
+        {
             JSValueRef* array = new JSValueRef[loc_count];
             JSValueProtect(ctx, *array);
-            
+
             for (size_t i = 0; i < loc_count; i++)
             {
                 JSStringRef str = JSStringCreateWithUTF8CString(loc_files[i]);                                 
@@ -177,8 +177,10 @@ void MyApp::OnDOMReady(ultralight::View* caller,
         for (size_t i = 0; i < loc_count; i++)
         {
             delete[] loc_files[i];
-        }                                                                                      
+        } 
     }
+
+    ConfigureJsStartup(ctx);
     
 }
 
@@ -261,6 +263,36 @@ int MyApp::CalculateLocFilesCount()
     }
 
     return count;
+}
+
+void MyApp::addJuce(const JSObject& thisObject, const JSArgs& args)
+{
+    JSValue name = args[0];
+    JSValue manufacturer = args[1];
+    JSValue volume = args[2];
+    
+    char name_buff[1024];
+    char manufacturer_buff[1024];
+    char volume_buff[128];
+    
+    JSStringGetUTF8CString(name.ToString(), name_buff, sizeof(name_buff));
+    JSStringGetUTF8CString(manufacturer.ToString(), manufacturer_buff, sizeof(manufacturer_buff));
+    JSStringGetUTF8CString(volume.ToString(), volume_buff, sizeof(volume_buff));
+
+    float volume = atof(volume_buff);
+
+    _juce_storage->addToEnd(Juce(name_buff, manufacturer_buff, volume));
+   
+}
+
+void MyApp::ConfigureJsStartup(JSContextRef ctx)
+{
+    SetJSContext(ctx);
+
+    JSObject global = JSGlobalObject();
+
+    global["addJuce"] = BindJSCallback(&MyApp::addJuce);
+
 }
 
 void MyApp::GetLocalizationFiles(char** jsons)
@@ -360,13 +392,13 @@ int MyApp::CalculatePathToSrc(
         }
         else
             if (word_temp->addToEnd(path[i], error) != 0)
-            {                
+            {
                 return FAILED;
             }
         
         if (result->addToEnd(path[i], error) != 0)
         {
             return FAILED;
-        }                              
+        }
     }
 }

@@ -73,6 +73,9 @@ private:
     void SetPathVariables();
     void GetLocalizationFiles(char** jsons);
     int CalculateLocFilesCount();
+    void ConfigureJsStartup(JSContextRef ctx);
+
+    void addJuce(const JSObject& thisObject, const JSArgs& args);
 };
 
 #endif
