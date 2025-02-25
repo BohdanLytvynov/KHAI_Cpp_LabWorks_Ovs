@@ -32,3 +32,8 @@ body {
     margin-bottom: 30px;
 }
 
+.sel-row
+{
+    background: rgb(89, 145, 194);   
+}
+

@@ -3,6 +3,8 @@
 
 #define JUCE_H
 
+#include<string>
+
 struct Juce
 {
 	Juce();
@@ -12,6 +14,8 @@ struct Juce
 	char* getName();
 	char* getManufacturer();
 	float& getValume();
+
+	std::string Stringify() const;
 
 private:
 	char* _name;

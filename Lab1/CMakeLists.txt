@@ -43,7 +43,7 @@ if($ENV{boostRoot} STREQUAL "")
   set(Boost_USE_MULTITHREADED ON)
 
   # Searching for required components
-  find_package(Boost 1.87.0 REQUIRED COMPONENTS system filesystem)
+  find_package(Boost 1.87.0 REQUIRED COMPONENTS system filesystem json)
   if(Boost_FOUND)
       message("Boost was found.")
       message("Boost include directories were found: ${Boost_INCLUDE_DIRS}")

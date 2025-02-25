@@ -1,14 +1,27 @@
  
 var loc_files = new Map();
 var first_lang = "";
+var selectedJuce = "-1";//Juce selected on the View
+var selectedId = -1
+
 //Used for testing
 let json = ['{"language":"English","main-page":{"title":"Lab Work 1","langs-select":"Select the language you want please:","langs":[{"disp-name":"English","value":"English"},{"disp-name":"Ukrainian","value":"Ukrainian"}],"description":"Here is our Juce Store. You can use it store different type of juces. Use buttons Add, Edit and Remove to manipulate the data.","lv-title":"Juce List:","buttons":{"add-btn":"Add","edit-btn":"Edit","del-btn":"Remove"}},"add-offcanv":{"juce-name-label":"Enter Juce Name:","juce-manufacturer-label":"Enter Juce Manufacturer:","juce-volume-label":"Enter Juce volume:","add-juce-btn":"Add","clear-juce-btn":"Clear","back-to-main-btn":"Back"},"edit-offcanv":{"juce-name-label-edit":"Edit Juce Name:","juce-manufacturer-label-edit":"Edit Juce Manufacturer:","juce-volume-label-edit":"Edit Juce volume:","save-juce-btn-edit":"Save","clear-juce-btn-edit":"Clear","back-to-main-btn-edit":"Back"}}', '{"language":"Ukrainian","main-page":{"title":"Лабораторна робота номер 1","langs-select":"Виберіть мову, яку ви бажаєте:","langs":[{"disp-name":"Англійська","value":"English"},{"disp-name":"Українська","value":"Ukrainian"}],"description":"Це наше сховище соків. Ви можете додавати, редагувати та видаляти соки використовуючи відповідні кнопки знизу.","lv-title":"Список соків:","buttons":{"add-btn":"Додати","edit-btn":"Редагувати","del-btn":"Видалити"}},"add-offcanv":{"juce-name-label":"Введіть назву сока:","juce-manufacturer-label":"Введіть назву виробника сока:","juce-volume-label":"введіть обєм сока:","add-juce-btn":"Додати","clear-juce-btn":"Очистити","back-to-main-btn":"Назад"},"edit-offcanv":{"juce-name-label-edit":"Редагувати назву сока:","juce-manufacturer-label-edit":"Редагувати виробника сока:","juce-volume-label-edit":"Редагувати обєм сока:","save-juce-btn-edit":"Зберегти","clear-juce-btn-edit":"Очистити","back-to-main-btn-edit":"Назад"}}']
 
+let juces = ['{"id":0,"name":"some","manufacturer":"some","volume":2E0}','{"id":1,"name":"some1","manufacturer":"some1","volume":1E0}']
+
 document.addEventListener("DOMContentLoaded", event => 
 {   
-    //setLocalizationFiles(json)
+    updateJuceView(juces)
+    setLocalizationFiles(json)
     createBindings()
+    EnableVisualRowSelection();
 });
+
+function EnableVisualRowSelection()
+{
+    let lv = getElementById("list-view")       
+    lv.style.setProperty("--bs-table-bg", "#ffffff00")
+}
 
 function createBindings()
 {        
@@ -53,17 +66,109 @@ function createBindings()
         }
     }
     )
+
+    getElementById("edit-btn").addEventListener("click", event => 
+    {
+        let listView = getElementById("list-view")
+
+        let tbody = listView.querySelector("tbody")
+
+        let selRow = tbody.querySelector('tr[class="sel-row"]')
+
+        selectedId = selRow.querySelector("th").innerHTML
+
+        let data = selRow.querySelectorAll("td")
+
+        let i = 0;
+        for (const d of data) {
+            if(i === 0)
+            {
+                getElementById("juce-name-edit").value = d.innerHTML
+            }
+            else if(i === 1)
+            {
+                getElementById("juce-manufacturer-edit").value = d.innerHTML
+            }
+            else
+            {
+                getElementById("juce-volume-edit").value = d.innerHTML
+            }
+            
+            ++i
+        }
+    }
+    )
 }
 
-// function addJuce(juceName, juceManufacturer, juceVolume)
-// {
-//     if(juceName && juceManufacturer && juceVolume)
-//     {        
-//         return `{"name":"${juceName}", "manufact":"${juceManufacturer}", "volume":"${juceVolume}"}`;
-//     }
+function CleanChildren(htmlElement)
+{
+    if(htmlElement.hasChildNodes())
+        {
+            let child = htmlElement.lastElementChild;
+            while (child) {
+                htmlElement.removeChild(child);
+                child = htmlElement.lastElementChild;
+            }
+        }
+}
 
-//     return ""
-// }
+function updateJuceView(juceList)
+{               
+    let listView = getElementById("list-view")
+    
+    let tbody = listView.querySelector("tbody")
+
+    CleanChildren(tbody)
+
+    let i = 1;
+    for (const juceStr of juceList)
+    {       
+        const juce = JSON.parse(juceStr)
+     
+        if(juce == undefined)
+        {
+            console.error("Unable to parce juceList parameter! function updateJuceView(juceList)")
+        }
+
+        let tr = document.createElement("tr")
+        tr.setAttribute("id", `${i}`)
+        let th = document.createElement("th")
+        th.setAttribute("scope", "row")
+        th.innerHTML = juce.id
+        tr.appendChild(th)                
+
+        let td_name = document.createElement("td")
+        td_name.innerHTML = juce.name
+        tr.appendChild(td_name)
+
+        let td_manufacturer = document.createElement("td")
+        td_manufacturer.innerHTML = juce.manufacturer
+        tr.appendChild(td_manufacturer)
+
+        let td_volume = document.createElement("td")
+        td_volume.innerHTML = juce.volume
+        tr.appendChild(td_volume)
+
+        tr.addEventListener("click", function(e)
+        {            
+            //Remove selection from the already selected tr
+            let elem = tbody.querySelector(`tr[id="${selectedJuce}"]`)
+
+            if(elem && elem.classList.contains("sel-row"))
+            {              
+                elem.classList.remove("sel-row")
+            }
+
+            tr.classList.add("sel-row")
+            selectedJuce = tr.getAttribute("id")
+        }
+        )
+
+        tbody.appendChild(tr)
+
+        ++i
+    }
+}
 
 function setLocalization(localization)
 {    
@@ -169,14 +274,7 @@ function FillLangSelector(loc_file)
     let languages = mainPage["langs"]
     let lSelect = getelementByQuery("div", "id", "langs");    
     //Clear options if they exists
-    if(lSelect.hasChildNodes())
-    {               
-        let child = lSelect.lastElementChild;
-        while (child) {
-            lSelect.removeChild(child);
-            child = lSelect.lastElementChild;
-        }
-    }
+    CleanChildren(lSelect)
     
     languages.forEach((l) => {
         let option = document.createElement("a") 

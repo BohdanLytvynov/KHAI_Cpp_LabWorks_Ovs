@@ -270,7 +270,8 @@ void MyApp::addJuce(const JSObject& thisObject, const JSArgs& args)
     JSValue name = args[0];
     JSValue manufacturer = args[1];
     JSValue volume = args[2];
-    
+    std::exception ex;
+
     char name_buff[1024];
     char manufacturer_buff[1024];
     char volume_buff[128];
@@ -279,10 +280,68 @@ void MyApp::addJuce(const JSObject& thisObject, const JSArgs& args)
     JSStringGetUTF8CString(manufacturer.ToString(), manufacturer_buff, sizeof(manufacturer_buff));
     JSStringGetUTF8CString(volume.ToString(), volume_buff, sizeof(volume_buff));
 
-    float volume = atof(volume_buff);
+    float volumef = atof(volume_buff);
 
-    _juce_storage->addToEnd(Juce(name_buff, manufacturer_buff, volume));
-   
+    if (_juce_storage->addToEnd(Juce(name_buff, manufacturer_buff, volumef), ex) != 0)
+    {
+        //Log exception of adding the Juce
+    }   
+    else
+    {
+        UpdateView(name.context());
+    }
+    
+}
+
+void MyApp::UpdateView(JSContextRef ctx)
+{
+    std::exception ex("");
+         
+    JSValueRef* excep = nullptr;
+
+    int juceCount = _juce_storage->length();
+
+    JSValueRef* jsonArray = new JSValueRef[juceCount];
+
+    JSValueProtect(ctx, *jsonArray);
+
+    _juce_storage->iterate(
+        [ctx, &jsonArray](const Juce& juce, int index)->bool
+        {            
+            auto str = juce.Stringify();
+
+            JSStringRef jsStr = JSStringCreateWithUTF8CString(str.c_str());
+
+            jsonArray[index] = JSValueMakeString(ctx, jsStr);
+            
+            JSStringRelease(jsStr);
+            
+            return true;
+        },ex
+    );
+
+    if (std::strcmp(ex.what(), "") != 0)
+    {
+        //log some exception
+    }
+    
+    js_interop::JSHelper::CallJSFunction(ctx, "updateJuceView", [ctx, juceCount, jsonArray, &excep]
+    (JSObjectRef& args, size_t& count)
+        {
+            args = JSObjectMakeArray(ctx, juceCount, jsonArray, excep);
+
+            count = sizeof(args) / sizeof(JSObjectRef*);
+        }, excep
+    );
+
+    if (excep != nullptr)
+    {
+        //Log exception
+    }
+
+    JSValueUnprotect(ctx, *jsonArray);
+
+    delete[] jsonArray;
 }
 
 void MyApp::ConfigureJsStartup(JSContextRef ctx)
@@ -292,7 +351,6 @@ void MyApp::ConfigureJsStartup(JSContextRef ctx)
     JSObject global = JSGlobalObject();
 
     global["addJuce"] = BindJSCallback(&MyApp::addJuce);
-
 }
 
 void MyApp::GetLocalizationFiles(char** jsons)
