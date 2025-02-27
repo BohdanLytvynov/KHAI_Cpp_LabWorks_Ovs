@@ -12,18 +12,24 @@
         <div class="mb-3">
           <label for="juce-name" class="form-label" id="juce-name-label"></label>
           <input type="text" class="form-control" id="juce-name">
+          <div class="invalid-feedback" id="valid-feedback-juce-name">
+          </div>
         </div>
         <div class="mb-3">
           <label for="juce-manufacturer" class="form-label" id="juce-manufacturer-label"></label>
           <input type="text" class="form-control" id="juce-manufacturer">
+          <div class="invalid-feedback" id="valid-feedback-juce-manufacturer">
+          </div>
         </div>
         <div class="mb-3">
           <label for="juce-volume" class="form-label" id="juce-volume-label"></label>
           <input type="text" class="form-control" id="juce-volume">
+          <div class="invalid-feedback" id="valid-feedback-juce-volume">
+          </div>
         </div>
         <div class="row">
           <div class="col-auto">
-            <button type="submit" id="add-juce-btn" class="btn btn-primary mb-3"></button>
+            <button type="submit" id="add-juce-btn" class="btn btn-secondary mb-3"></button>
           </div>
           <div class="col-auto">
             <button type="submit" id="clear-juce-btn" class="btn btn-warning mb-3"></button>
@@ -53,13 +59,13 @@
         </div>
         <div class="row">
           <div class="col-auto">
-            <button type="submit" id="save-juce-btn-edit" class="btn btn-primary mb-3"></button>
+            <button type="submit" id="save-juce-btn-edit" class="btn btn-secondary mb-3"></button>
           </div>
           <div class="col-auto">
-            <button type="submit" id="clear-juce-btn-edit" class="btn btn-warning mb-3"></button>
+            <button type="submit" id="clear-juce-btn-edit" class="btn btn-secondary mb-3"></button>
           </div>
           <div class="col-auto">
-            <button type="submit" id="back-to-main-btn-edit" class="btn btn-danger mb-3" 
+            <button type="submit" id="back-to-main-btn-edit" class="btn btn-secondary mb-3" 
             data-bs-dismiss="offcanvas"></button>
           </div>
         </div>        

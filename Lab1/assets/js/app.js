@@ -3,6 +3,11 @@ var loc_files = new Map();
 var first_lang = "";
 var selectedJuce = "-1";//Juce selected on the View
 var selectedId = -1
+var validation = new Map();
+
+var canAdd = false
+var canEdit = false
+var canDelete = false;
 
 //Used for testing
 let json = ['{"language":"English","main-page":{"title":"Lab Work 1","langs-select":"Select the language you want please:","langs":[{"disp-name":"English","value":"English"},{"disp-name":"Ukrainian","value":"Ukrainian"}],"description":"Here is our Juce Store. You can use it store different type of juces. Use buttons Add, Edit and Remove to manipulate the data.","lv-title":"Juce List:","buttons":{"add-btn":"Add","edit-btn":"Edit","del-btn":"Remove"}},"add-offcanv":{"juce-name-label":"Enter Juce Name:","juce-manufacturer-label":"Enter Juce Manufacturer:","juce-volume-label":"Enter Juce volume:","add-juce-btn":"Add","clear-juce-btn":"Clear","back-to-main-btn":"Back"},"edit-offcanv":{"juce-name-label-edit":"Edit Juce Name:","juce-manufacturer-label-edit":"Edit Juce Manufacturer:","juce-volume-label-edit":"Edit Juce volume:","save-juce-btn-edit":"Save","clear-juce-btn-edit":"Clear","back-to-main-btn-edit":"Back"}}', '{"language":"Ukrainian","main-page":{"title":"Лабораторна робота номер 1","langs-select":"Виберіть мову, яку ви бажаєте:","langs":[{"disp-name":"Англійська","value":"English"},{"disp-name":"Українська","value":"Ukrainian"}],"description":"Це наше сховище соків. Ви можете додавати, редагувати та видаляти соки використовуючи відповідні кнопки знизу.","lv-title":"Список соків:","buttons":{"add-btn":"Додати","edit-btn":"Редагувати","del-btn":"Видалити"}},"add-offcanv":{"juce-name-label":"Введіть назву сока:","juce-manufacturer-label":"Введіть назву виробника сока:","juce-volume-label":"введіть обєм сока:","add-juce-btn":"Додати","clear-juce-btn":"Очистити","back-to-main-btn":"Назад"},"edit-offcanv":{"juce-name-label-edit":"Редагувати назву сока:","juce-manufacturer-label-edit":"Редагувати виробника сока:","juce-volume-label-edit":"Редагувати обєм сока:","save-juce-btn-edit":"Зберегти","clear-juce-btn-edit":"Очистити","back-to-main-btn-edit":"Назад"}}']
@@ -15,6 +20,7 @@ document.addEventListener("DOMContentLoaded", event =>
     setLocalizationFiles(json)
     createBindings()
     EnableVisualRowSelection();
+    setupValidation();
 });
 
 function EnableVisualRowSelection()
@@ -322,4 +328,91 @@ function getelementByQuery(tagName, attribute, attribValue)
     
     return elem
 }
+
+function setupValidation()
+{
+    //Add Juce Validation Setup
+    let inputElem = getElementById("juce-name")
+    let feedback = getElementById("valid-feedback-juce-name")  
+    let idsToCheck = ["juce-name", "juce-manufacturer", "juce-volume"]
+    let submitBtn = getElementById("add-juce-btn")
+
+    addValidatorToTheInput(inputElem, feedback, idsToCheck, submitBtn, canAdd)
+    
+    feedback = getElementById("valid-feedback-juce-name")      
+    submitBtn = getElementById("add-juce-btn")
+
+    addValidatorToTheInput(inputElem, feedback, idsToCheck, submitBtn, canEdit)
+}
+
+function addValidatorToTheInput(inputElement, feedBackElement, elemntIdsToValidate, submitButton, canSubmit)
+{    
+    if(validation.contains(inputElement.getAttribute("id")))
+        validation.add(inputElement.getAttribute("id"), false)
+
+    inputElement.addEventListener("input", event =>
+        {        
+            let classes = inputElement.classList            
+            let error = ""
+            let isValid = validateNotEmpty(event.target.value, (e) => error = e)
+            validation.set(inputElement.getAttribute("id"), isValid)
+            if(isValid)
+            {                   
+                classes.replace("is-invalid", "is-valid")                                           
+            }
+            else
+            {
+                if(classes.contains("is-valid"))
+                    classes.remove("is-valid")
+    
+                classes.add("is-invalid")                        
+            }
+    
+            feedBackElement.innerHTML = error  
+
+            //Can press Submit
+            canSubmit = validMap(validation, elemntIdsToValidate)
+            if(canSubmit)
+            {
+                submitButton.classList.replace('btn-secondary', 'btn-primary')                
+            }
+            else
+            {
+                submitButton.classList.replace('btn-primary', 'btn-secondary')   
+            }
+        })
+}
+
+/////////////////////////////////VALIDATION/////////////////////////////////////////////////////////
+//value is empty or undefined -> returns false, else returns true
+//Also using function it can return the error
+function validateNotEmpty(value, retErrorFunc)
+{
+    if(value == undefined)
+    {
+        retErrorFunc("Value was not set!")
+        return false;
+    }
+        
+    if(value === "")
+    {
+        retErrorFunc("Value was not set!")
+        return false
+    }
+    
+    retErrorFunc("")
+    return true
+}
+
+function validMap(map, elemntIdsToValidate)
+{
+    for (const id of elemntIdsToValidate) 
+    {
+        if(!map.get(id))
+            return false
+    }
+
+    return true
+}
+
 
