@@ -9,17 +9,28 @@ struct Juce
 {
 	Juce();
 
-	Juce(char* name, char* manufacturer, float volume);
+	Juce(const char* name, const char* manufacturer, float volume);
 
-	char* getName();
-	char* getManufacturer();
-	float& getValume();
+	~Juce();
+
+	Juce(const Juce& other);
+
+	Juce& operator = (const Juce& other);
+
+	const char* getName() const;
+	const char* getManufacturer() const;
+	float getValume() const;
+	int getId() const;
+
+	void setName(const char* name);
+	void setManufacturer(const char* manufacturer);
+	void setVolume(float volume);
 
 	std::string Stringify() const;
 
 private:
-	char* _name;
-	char* _manufacturer;
+	const char* _name;
+	const char* _manufacturer;
 	float _volume;
 	int _id;
 	static int _id_g;

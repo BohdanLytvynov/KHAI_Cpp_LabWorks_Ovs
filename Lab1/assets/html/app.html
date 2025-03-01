@@ -29,7 +29,7 @@
         </div>
         <div class="row">
           <div class="col-auto">
-            <button type="submit" id="add-juce-btn" class="btn btn-secondary mb-3"></button>
+            <button type="submit" id="add-juce-btn" class="btn btn-secondary mb-3" disabled></button>
           </div>
           <div class="col-auto">
             <button type="submit" id="clear-juce-btn" class="btn btn-warning mb-3"></button>
@@ -48,24 +48,30 @@
         <div class="mb-3">
           <label for="juce-name-edit" class="form-label" id="juce-name-label-edit"></label>
           <input type="text" class="form-control" id="juce-name-edit">
+          <div class="invallid-feedback" id="valid-feedback-juce-name-edit">            
+          </div>
         </div>
         <div class="mb-3">
           <label for="juce-manufacturer-edit" class="form-label" id="juce-manufacturer-label-edit"></label>
           <input type="text" class="form-control" id="juce-manufacturer-edit">
+          <div class="invalid-feedback" id="valid-feedback-juce-manufacturer-edit">            
+          </div>
         </div>
         <div class="mb-3">
           <label for="juce-volume-edit" class="form-label" id="juce-volume-label-edit"></label>
           <input type="text" class="form-control" id="juce-volume-edit">
+          <div class="invalid-feedback" id="valid-feedback-juce-volume-edit">            
+          </div>
         </div>
         <div class="row">
           <div class="col-auto">
-            <button type="submit" id="save-juce-btn-edit" class="btn btn-secondary mb-3"></button>
+            <button type="submit" id="save-juce-btn-edit" class="btn btn-primary mb-3"></button>
           </div>
           <div class="col-auto">
-            <button type="submit" id="clear-juce-btn-edit" class="btn btn-secondary mb-3"></button>
+            <button type="submit" id="clear-juce-btn-edit" class="btn btn-warning mb-3"></button>
           </div>
           <div class="col-auto">
-            <button type="submit" id="back-to-main-btn-edit" class="btn btn-secondary mb-3" 
+            <button type="submit" id="back-to-main-btn-edit" class="btn btn-danger mb-3" 
             data-bs-dismiss="offcanvas"></button>
           </div>
         </div>        
@@ -117,10 +123,10 @@
               <button type="button" class="btn btn-primary buttons-mr" id="add-btn" 
               data-bs-toggle="offcanvas" data-bs-target="#add-offcanv">               
               </button>
-              <button type="button" class="btn btn-warning buttons-mr" id="edit-btn"
+              <button type="button" class="btn btn-secondary buttons-mr" id="edit-btn" disabled
               data-bs-toggle="offcanvas" data-bs-target="#edit-offcanv">                
               </button>
-              <button type="button" class="btn btn-danger buttons-mr" id="del-btn">                
+              <button type="button" class="btn btn-secondary buttons-mr" disabled id="del-btn">                
               </button>
             </div>         
         </div>

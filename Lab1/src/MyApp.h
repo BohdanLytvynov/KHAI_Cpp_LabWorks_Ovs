@@ -76,6 +76,8 @@ private:
     void ConfigureJsStartup(JSContextRef ctx);
     
     void addJuce(const JSObject& thisObject, const JSArgs& args);
+    void editJuce(const JSObject& thisObject, const JSArgs& args);
+    void deleteJuce(const JSObject& thisObject, const JSArgs& args);
 
     void UpdateView(JSContextRef ctx);
 };

@@ -19,11 +19,12 @@ JSValueRef js_interop::JSHelper::CallJSFunction(
 		//Check wether funcObj is not nullptr and it is the JS function
 		if (funcObj != nullptr && JSObjectIsFunction(ctx, funcObj))
 		{
-			JSObjectRef args;
+			JSObjectRef args = nullptr;
 
 			size_t num_args = 0;
 
-			buildArgs(args, num_args);
+			if(buildArgs != nullptr)
+				buildArgs(args, num_args);
 
 			result = JSObjectCallAsFunction(ctx, funcObj, 0,
 				num_args, &args,

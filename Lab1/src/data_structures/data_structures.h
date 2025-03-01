@@ -159,7 +159,7 @@ namespace ds
 
 			int addToEnd(TObject data, std::exception& error)
 			{
-				return _executor.execute([data, this]()
+				return _executor.execute([&data, this]()
 					{
 						SLLNPtr dataPtr = new SLLN(data);
 

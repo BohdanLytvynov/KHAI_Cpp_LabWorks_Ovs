@@ -1,8 +1,7 @@
  
 var loc_files = new Map();
 var first_lang = "";
-var selectedJuce = "-1";//Juce selected on the View
-var selectedId = -1
+var selectedJuceId = -1;//Juce selected on the View
 var validation = new Map();
 
 var canAdd = false
@@ -16,7 +15,7 @@ let juces = ['{"id":0,"name":"some","manufacturer":"some","volume":2E0}','{"id":
 
 document.addEventListener("DOMContentLoaded", event => 
 {   
-    updateJuceView(juces)
+    //updateJuceView(juces)
     setLocalizationFiles(json)
     createBindings()
     EnableVisualRowSelection();
@@ -31,11 +30,22 @@ function EnableVisualRowSelection()
 
 function createBindings()
 {        
+    let submitAdd = getElementById("add-juce-btn")
+
     getElementById("clear-juce-btn").addEventListener("click", (event) =>
         {
-            getElementById("juce-name").value = ""
-            getElementById("juce-manufacturer").value = ""
-            getElementById("juce-volume").value = ""
+            let nameInp = getElementById("juce-name")
+            nameInp.value = ""
+            let manufacturerInp = getElementById("juce-manufacturer")
+            manufacturerInp.value = ""
+            let volumeInp = getElementById("juce-volume")
+            volumeInp.value = ""
+            
+            ReplaceClass(nameInp.classList, "is-valid", "is-invalid" )
+            ReplaceClass(manufacturerInp.classList, "is-valid", "is-invalid")
+            ReplaceClass(volumeInp.classList, "is-valid", "is-invalid")
+            ReplaceClass(submitAdd.classList, "btn-primary", "btn-secondary")
+            submitAdd.disabled = true
         }
     )
 
@@ -44,6 +54,7 @@ function createBindings()
             getElementById("juce-name-edit").value = ""
             getElementById("juce-manufacturer-edit").value = ""
             getElementById("juce-volume-edit").value = ""
+            
         }
     )
 
@@ -53,7 +64,8 @@ function createBindings()
             let manuf = getElementById("juce-manufacturer").value
             let volume = getElementById("juce-volume").value
 
-            addJuce(name, manuf, volume);
+            if(canAdd)
+                addJuce(name, manuf, volume);
         }
     )    
 
@@ -80,9 +92,7 @@ function createBindings()
         let tbody = listView.querySelector("tbody")
 
         let selRow = tbody.querySelector('tr[class="sel-row"]')
-
-        selectedId = selRow.querySelector("th").innerHTML
-
+        
         let data = selRow.querySelectorAll("td")
 
         let i = 0;
@@ -104,6 +114,24 @@ function createBindings()
         }
     }
     )
+
+    getElementById("save-juce-btn-edit").addEventListener("click", e =>
+    {
+        let newName = getElementById("juce-name-edit").value
+        let newManufacturer = getElementById("juce-manufacturer-edit").value
+        let newVolume = getElementById("juce-volume-edit").value
+
+        if(canEdit)
+            editJuce(selectedJuceId, newName, newManufacturer, newVolume)
+    }
+    )
+
+    getElementById("del-btn").addEventListener("click", e =>
+    {
+        if(selectedJuceId >= 0)
+            deleteJuce(selectedJuceId)
+    }
+    )
 }
 
 function CleanChildren(htmlElement)
@@ -118,8 +146,29 @@ function CleanChildren(htmlElement)
         }
 }
 
+function ClearView()
+{
+    let listView = getElementById("list-view")
+    
+    let tbody = listView.querySelector("tbody")
+
+    CleanChildren(tbody)
+
+    selectedJuceId = -1
+
+    let edit = getElementById("edit-btn")
+    edit.disabled = true
+    UpdateElementsClass(edit, "btn-warning", "btn-secondary")
+
+    let del = getElementById("del-btn")
+    del.disabled = true
+    UpdateElementsClass(del, "btn-danger", "btn-secondary")
+}
+
 function updateJuceView(juceList)
-{               
+{            
+    console.log(juceList)
+    
     let listView = getElementById("list-view")
     
     let tbody = listView.querySelector("tbody")
@@ -137,10 +186,10 @@ function updateJuceView(juceList)
         }
 
         let tr = document.createElement("tr")
-        tr.setAttribute("id", `${i}`)
+        tr.setAttribute("id", `${juce.id}`)
         let th = document.createElement("th")
         th.setAttribute("scope", "row")
-        th.innerHTML = juce.id
+        th.innerHTML = i
         tr.appendChild(th)                
 
         let td_name = document.createElement("td")
@@ -158,7 +207,7 @@ function updateJuceView(juceList)
         tr.addEventListener("click", function(e)
         {            
             //Remove selection from the already selected tr
-            let elem = tbody.querySelector(`tr[id="${selectedJuce}"]`)
+            let elem = tbody.querySelector(`tr[id="${selectedJuceId}"]`)
 
             if(elem && elem.classList.contains("sel-row"))
             {              
@@ -166,7 +215,19 @@ function updateJuceView(juceList)
             }
 
             tr.classList.add("sel-row")
-            selectedJuce = tr.getAttribute("id")
+            selectedJuceId = Number(tr.getAttribute("id"))
+            
+            if(selectedJuceId >= 0)
+            {
+                let editButton = getElementById("edit-btn")
+                editButton.disabled = false
+                UpdateElementsClass(editButton, "btn-secondary", "btn-warning")
+
+                let deleteButton = getElementById("del-btn")
+                deleteButton.disabled = false
+                UpdateElementsClass(deleteButton, "btn-secondary", "btn-danger")
+            }
+
         }
         )
 
@@ -337,50 +398,96 @@ function setupValidation()
     let idsToCheck = ["juce-name", "juce-manufacturer", "juce-volume"]
     let submitBtn = getElementById("add-juce-btn")
 
-    addValidatorToTheInput(inputElem, feedback, idsToCheck, submitBtn, canAdd)
+    addValidationToTheElement(["input"],validateNotEmpty, inputElem, feedback, idsToCheck, submitBtn, v => canAdd = v)
     
-    feedback = getElementById("valid-feedback-juce-name")      
-    submitBtn = getElementById("add-juce-btn")
+    inputElem = getElementById("juce-manufacturer")
+    feedback = getElementById("valid-feedback-juce-manufacturer")      
+    
+    addValidationToTheElement(["input"],validateNotEmpty, inputElem, feedback, idsToCheck, submitBtn, v => canAdd = v)
 
-    addValidatorToTheInput(inputElem, feedback, idsToCheck, submitBtn, canEdit)
+    inputElem = getElementById("juce-volume")
+    feedback = getElementById("valid-feedback-juce-volume") 
+
+    addValidationToTheElement(["input"],validateNumber, inputElem, feedback, idsToCheck, submitBtn, v => canAdd = v)
+
+    inputElem = getElementById("juce-name-edit")
+    feedback = getElementById("valid-feedback-juce-name-edit")
+    idsToCheck = ["juce-name-edit", "juce-manufacturer-edit", "juce-volume-edit"]
+    submitBtn = getElementById("save-juce-btn-edit")
+
+    addValidationToTheElement(["input"], validateNotEmpty, inputElem, feedback, idsToCheck, submitBtn, v => canEdit = v, true)
+
+    inputElem = getElementById("juce-manufacturer-edit")
+    feedback = getElementById("valid-feedback-juce-manufacturer-edit")
+
+    addValidationToTheElement(["input"], validateNotEmpty, inputElem, feedback, idsToCheck, submitBtn, v => canEdit = v, true)
+
+    inputElem = getElementById("juce-volume-edit")
+    feedback = getElementById("valid-feedback-juce-volume-edit")
+
+    addValidationToTheElement(["input"], validateNumber, inputElem, feedback, idsToCheck, submitBtn, v => canEdit = v, true)
 }
 
-function addValidatorToTheInput(inputElement, feedBackElement, elemntIdsToValidate, submitButton, canSubmit)
+function addValidationToTheElement(eventsToBind, validatorFunc, Element, feedBackElement, elemntIdsToValidate, submitButton, 
+    canSubmitRetFunc, defMapValue = false)
 {    
-    if(validation.contains(inputElement.getAttribute("id")))
-        validation.add(inputElement.getAttribute("id"), false)
+    if(validatorFunc == undefined)
+        console.error("Validator Function was not set! function addValidatorToTheInput")
 
-    inputElement.addEventListener("input", event =>
-        {        
-            let classes = inputElement.classList            
+    if(!validation.has(Element.getAttribute("id")))
+        validation.set(Element.getAttribute("id"), defMapValue)
+    
+    for (const event of eventsToBind) {
+
+        Element.addEventListener(event, e =>
+        {    
+            let canSubmit = false;    
+            let classes = Element.classList            
             let error = ""
-            let isValid = validateNotEmpty(event.target.value, (e) => error = e)
-            validation.set(inputElement.getAttribute("id"), isValid)
+            let isValid = validatorFunc(e.target.value, (e) => error = e)
+            validation.set(Element.getAttribute("id"), isValid)
             if(isValid)
-            {                   
-                classes.replace("is-invalid", "is-valid")                                           
+            {          
+                ReplaceClass(classes, "is-invalid", "is-valid")                                                              
             }
             else
             {
-                if(classes.contains("is-valid"))
-                    classes.remove("is-valid")
-    
-                classes.add("is-invalid")                        
+                ReplaceClass(classes, "is-valid", "is-invalid")                                                 
             }
-    
+        
             feedBackElement.innerHTML = error  
-
+    
             //Can press Submit
             canSubmit = validMap(validation, elemntIdsToValidate)
             if(canSubmit)
-            {
-                submitButton.classList.replace('btn-secondary', 'btn-primary')                
+            {                  
+                ReplaceClass(submitButton.classList, "btn-secondary", "btn-primary")
+                submitButton.disabled = false             
             }
             else
             {
-                submitButton.classList.replace('btn-primary', 'btn-secondary')   
+                ReplaceClass(submitButton.classList, "btn-primary", "btn-secondary")                  
+                submitButton.disabled = true
             }
+
+            canSubmitRetFunc(canSubmit)
         })
+    }
+}
+
+function ReplaceClass(classList, oldValue, newValue)
+{
+    if(classList.contains(oldValue))
+    {
+        classList.remove(oldValue)
+    }
+
+    classList.add(newValue)
+}
+
+function UpdateElementsClass(htmlElement, oldClass, newClass)
+{
+    ReplaceClass(htmlElement.classList,oldClass, newClass)
 }
 
 /////////////////////////////////VALIDATION/////////////////////////////////////////////////////////
@@ -388,20 +495,32 @@ function addValidatorToTheInput(inputElement, feedBackElement, elemntIdsToValida
 //Also using function it can return the error
 function validateNotEmpty(value, retErrorFunc)
 {
-    if(value == undefined)
+    if(value == undefined || value === "")
     {
         retErrorFunc("Value was not set!")
         return false;
     }
-        
-    if(value === "")
+                
+    retErrorFunc("")
+    return true
+}
+
+function validateNumber(value, retErrorFunc)
+{
+    if(value == undefined || value === "")
     {
         retErrorFunc("Value was not set!")
         return false
     }
     
+    if(isNaN(Number(value)))
+    {
+        retErrorFunc(`Unable to parse ${value} to the number!`)
+        return false
+    }
+
     retErrorFunc("")
-    return true
+    return true    
 }
 
 function validMap(map, elemntIdsToValidate)

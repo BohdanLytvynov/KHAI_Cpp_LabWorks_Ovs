@@ -220,12 +220,12 @@ RefPtr<View> MyApp::OnCreateInspectorView(ultralight::View* caller, bool is_loca
 
     _inspector_window->set_listener(this);
     
-    return inspector_overlay_->view();    
+    return inspector_overlay_->view();
 }
 
 void MyApp::AllocateInitFields()
 {
-    MyApp::_juce_storage = new ds::linear_ds::single_linked_list<Juce>();    
+    MyApp::_juce_storage = new ds::linear_ds::single_linked_list<Juce>();
 
     SetPathVariables();
 }
@@ -274,15 +274,11 @@ void MyApp::addJuce(const JSObject& thisObject, const JSArgs& args)
 
     char name_buff[1024];
     char manufacturer_buff[1024];
-    char volume_buff[128];
     
     JSStringGetUTF8CString(name.ToString(), name_buff, sizeof(name_buff));
     JSStringGetUTF8CString(manufacturer.ToString(), manufacturer_buff, sizeof(manufacturer_buff));
-    JSStringGetUTF8CString(volume.ToString(), volume_buff, sizeof(volume_buff));
-
-    float volumef = atof(volume_buff);
-
-    if (_juce_storage->addToEnd(Juce(name_buff, manufacturer_buff, volumef), ex) != 0)
+       
+    if (_juce_storage->addToEnd(Juce(name_buff, manufacturer_buff, (float)volume.ToNumber()), ex) != 0)
     {
         //Log exception of adding the Juce
     }   
@@ -291,6 +287,93 @@ void MyApp::addJuce(const JSObject& thisObject, const JSArgs& args)
         UpdateView(name.context());
     }
     
+    std::memset(name_buff, 0, sizeof(name_buff));
+    std::memset(manufacturer_buff, 0, sizeof(manufacturer_buff));
+}
+
+void MyApp::editJuce(const JSObject& thisObject, const JSArgs& args)
+{
+    JSValue id = args[0];
+    JSValue name = args[1];
+    JSValue manufacturer = args[2]; 
+    JSValue volume = args[3];
+    std::exception ex("");
+    JSValue* exception;
+
+    char name_buff[1024];
+    char manufacturer_buff[1024];
+
+    bool updated = false;
+
+    JSStringGetUTF8CString(name.ToString(), name_buff, sizeof(name_buff));
+    JSStringGetUTF8CString(manufacturer.ToString(), manufacturer_buff, sizeof(manufacturer_buff));
+    
+    -_juce_storage->iterate([&updated, id, name_buff, manufacturer_buff, volume](Juce& obj, int index)->bool
+        {
+            if (obj.getId() == (int)id.ToNumber())
+            {
+                if (std::strcmp(obj.getName(), name_buff) != 0)
+                {
+                    obj.setName(name_buff);
+                    updated = true;
+                }
+
+                if (std::strcmp(obj.getManufacturer(), manufacturer_buff) != 0)
+                {
+                    obj.setManufacturer(manufacturer_buff);
+                    updated = true;
+                }
+
+                if (obj.getValume() != (float)volume.ToNumber())
+                {
+                    obj.setVolume((float)volume.ToNumber());
+                    updated = true;
+                }
+
+                return false;
+            }
+
+            return true;
+        }, ex);
+
+    if (std::strcmp(ex.what(), "") != 0)
+    {
+        //log something
+    }
+
+    if (updated)//Need to redraw the View
+    {
+        UpdateView(thisObject.context());
+    }
+}
+
+void MyApp::deleteJuce(const JSObject& thisObject, const JSArgs& args)
+{
+    JSValue id = args[0];
+    std::exception ex;
+
+    bool removed = false;
+
+    _juce_storage->remove([id, &removed](const Juce& obj)-> bool
+        {
+            if (obj.getId() == (int)id.ToNumber())
+            {
+                removed = true;
+                return true;
+            }
+
+            return false;
+        }, ex);
+
+    if (std::strcmp(ex.what(), "") != 0)
+    {
+        //log something
+    }
+
+    if (removed)
+    {
+        UpdateView(thisObject.context());
+    }
 }
 
 void MyApp::UpdateView(JSContextRef ctx)
@@ -300,6 +383,13 @@ void MyApp::UpdateView(JSContextRef ctx)
     JSValueRef* excep = nullptr;
 
     int juceCount = _juce_storage->length();
+
+    if (juceCount == 0)//Need to clean the View
+    {
+        js_interop::JSHelper::CallJSFunction(ctx, "ClearView", nullptr, excep);
+
+        return;
+    }     
 
     JSValueRef* jsonArray = new JSValueRef[juceCount];
 
@@ -330,7 +420,7 @@ void MyApp::UpdateView(JSContextRef ctx)
         {
             args = JSObjectMakeArray(ctx, juceCount, jsonArray, excep);
 
-            count = sizeof(args) / sizeof(JSObjectRef*);
+            count = juceCount;
         }, excep
     );
 
@@ -351,6 +441,8 @@ void MyApp::ConfigureJsStartup(JSContextRef ctx)
     JSObject global = JSGlobalObject();
 
     global["addJuce"] = BindJSCallback(&MyApp::addJuce);
+    global["editJuce"] = BindJSCallback(&MyApp::editJuce);
+    global["deleteJuce"] = BindJSCallback(&MyApp::deleteJuce);
 }
 
 void MyApp::GetLocalizationFiles(char** jsons)
@@ -363,13 +455,13 @@ void MyApp::GetLocalizationFiles(char** jsons)
     fs::directory_iterator iter{ path_to_local };    
     int i = 0;
     for (auto& entry : boost::make_iterator_range(fs::directory_iterator(path_to_local), {}))
-    {                
+    {
         std::ifstream inStr;
         inStr.open(entry.path().c_str(), std::ifstream::in);
         inStr.getline(jsons[i], strlen(jsons[i]));        
         inStr.close();
         ++i;
-    }    
+    }
 }
 
 void MyApp::DeallocateInitFields()
@@ -380,13 +472,13 @@ void MyApp::DeallocateInitFields()
 }
 
 void MyApp::UnsubscribeEvents()
-{    
+{
     window_->set_listener(nullptr);
     _inspector_window->set_listener(nullptr);
     app_->set_listener(nullptr);
     auto v = overlay_->view();
     v->set_load_listener(nullptr);
-    v->set_view_listener(nullptr);    
+    v->set_view_listener(nullptr);
 }
 
 int MyApp::CalculatePathToSrc(
@@ -416,35 +508,35 @@ int MyApp::CalculatePathToSrc(
     {
         if (path[i] == *delim)
         {
-            char* wordFroCompare = new char[word_temp->length() + 1];
+            char* wordForCompare = new char[word_temp->length() + 1];
 
             if (word_temp->addToEnd('\0', error) != 0)
             {
-                delete[] wordFroCompare;                
+                delete[] wordForCompare;
                 return FAILED;
             }
 
-            if (word_temp->ToArray(wordFroCompare, error) != 0)
+            if (word_temp->ToArray(wordForCompare, error) != 0)
             {
-                delete[] wordFroCompare;                
+                delete[] wordForCompare;
                 return FAILED;
             }
 
-            if (std::strcmp(wordFroCompare, stopWord) == 0)
+            if (std::strcmp(wordForCompare, stopWord) == 0)
             {
                 if (result->addToEnd('\0', error) != 0)
                 {
-                    delete[] wordFroCompare;
+                    delete[] wordForCompare;
                     return FAILED;
                 }
                 else
                 {
-                    delete[] wordFroCompare;
+                    delete[] wordForCompare;
                     return SUCCESS;
                 }
             }
 
-            delete[] wordFroCompare;
+            delete[] wordForCompare;
 
             word_temp->clear(error);
         }
