@@ -10,9 +10,7 @@ struct Juce
 	Juce();
 
 	Juce(const char* name, const char* manufacturer, float volume);
-
-	~Juce();
-
+	
 	Juce(const Juce& other);
 
 	Juce& operator = (const Juce& other);
@@ -29,8 +27,8 @@ struct Juce
 	std::string Stringify() const;
 
 private:
-	const char* _name;
-	const char* _manufacturer;
+	std::string _name;
+	std::string _manufacturer;
 	float _volume;
 	int _id;
 	static int _id_g;

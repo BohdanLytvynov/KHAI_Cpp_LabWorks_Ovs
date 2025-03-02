@@ -166,9 +166,7 @@ function ClearView()
 }
 
 function updateJuceView(juceList)
-{            
-    console.log(juceList)
-    
+{                    
     let listView = getElementById("list-view")
     
     let tbody = listView.querySelector("tbody")

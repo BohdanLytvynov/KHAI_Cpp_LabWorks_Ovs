@@ -11,64 +11,44 @@ Juce::Juce(const char* name, const  char* manufacturer, float volume)
 {
 	if (name != nullptr)
 	{
-		_name = new char[std::strlen(name)];
-		std::strcpy(const_cast<char*>(_name), name);
+		_name = std::string(name);
 	}
 
 	if (manufacturer != nullptr)
 	{
-		_manufacturer = new char[std::strlen(manufacturer)];
-		std::strcpy(const_cast<char*>(_manufacturer), manufacturer);
+		_manufacturer = std::string(manufacturer);
 	}
 
 	_volume = volume;
 	_id = _id_g++;
 }
 
-Juce::~Juce()
-{
-	if(_name != nullptr)
-		delete[] _name;//Error????
-
-	if(_manufacturer != nullptr)
-		delete[] _manufacturer;
-	_id_g--;
-}
-
 Juce::Juce(const Juce& other)
 {
-	_name = new char[std::strlen(other._name)];
-	std::strcpy(const_cast<char*>(_name), other._name);
-	_manufacturer = new char[std::strlen(other._manufacturer)];
-	std::strcpy(const_cast<char*>(_manufacturer), other._manufacturer);
+	_name = other._name;
+	_manufacturer = other._manufacturer;
 	_volume = other._volume;	
-	_id = other._id;
-
-	other.~Juce();
+	_id = other._id;	
 }
 
 Juce& Juce::operator=(const Juce& other)
 {
-	_name = new char[std::strlen(other._name)];
-	std::strcpy(const_cast<char*>(_name), other._name);
-	_manufacturer = new char[std::strlen(other._manufacturer)];
-	std::strcpy(const_cast<char*>(_manufacturer), other._manufacturer);
+	_name = other._name;
+	_manufacturer = other._manufacturer;
 	_volume = other._volume;
 	_id = other._id;
-
-	other.~Juce();
-
+	
 	return *this;
 }
 
 const char* Juce::getName() const
 {
-	return _name;
+	return _name.c_str();
 }
 
 const char* Juce::getManufacturer() const
 {
-	return _manufacturer;
+	return _manufacturer.c_str();
 }
 
 float Juce::getValume() const
@@ -83,20 +63,12 @@ int Juce::getId() const
 
 void Juce::setName(const char* name)
 {	
-	if (_name != nullptr)
-		delete[] _name;
-
-	_name = new char[std::strlen(name)];
-	std::strcpy(const_cast<char*>(_name), name);
+	_name = std::string(name);
 }
 
 void Juce::setManufacturer(const char* manufacturer)
 {
-	if (_manufacturer != nullptr)
-		delete[] _manufacturer;
-
-	_manufacturer = new char[std::strlen(manufacturer)];
-	std::strcpy(const_cast<char*>(_manufacturer), manufacturer);
+	_manufacturer = std::string(manufacturer);
 }
 
 void Juce::setVolume(float volume)
