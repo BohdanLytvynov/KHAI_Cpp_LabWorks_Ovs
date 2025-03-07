@@ -420,7 +420,7 @@ void MyApp::UpdateView(JSContextRef ctx)
         {
             args = JSObjectMakeArray(ctx, juceCount, jsonArray, excep);
 
-            count = juceCount;
+            count = 1;
         }, excep
     );
 

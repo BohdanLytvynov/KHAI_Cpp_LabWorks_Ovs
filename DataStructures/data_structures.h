@@ -271,7 +271,7 @@ namespace ds
 						{
 							SLLNPtr current = _start;
 
-							while (current != nullptr)
+							while (current->getNext() != nullptr)
 							{
 								if (predicate(current->getNext()->getData()))//We have found node for deleting
 								{

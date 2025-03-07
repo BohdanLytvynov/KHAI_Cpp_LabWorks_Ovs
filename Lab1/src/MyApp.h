@@ -13,7 +13,7 @@ typedef ds::linear_ds::single_linked_list<char>* SLLCHPtr;
 typedef ds::linear_ds::single_linked_list<char> SLLCH;
 
 class MyApp : public AppListener,
-    public WindowListener,
+    public WindowListener,                                                                                    
     public LoadListener,
     public ViewListener {
 public:

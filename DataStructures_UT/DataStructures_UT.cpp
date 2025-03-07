@@ -387,6 +387,26 @@ namespace DataStructuresUT
 			delete list;
 		}
 
+		TEST_METHOD(DeleteUnExistingNode_Test_Success)
+		{
+			//Arrange
+			SLLInt* list = new SLLInt();
+			std::exception ex("");
+			addDataToEndSLL(list, _numbs, _count, ex);
+
+			int number = _numbs[_count - 1] + 20;
+
+			//Act
+			int r = list->remove([number](const int& obj)-> bool {
+				return obj == number;
+				}, ex);
+
+			//Assert
+			Assert::IsTrue(r == 0, TEXT("Operation delete failed!"));
+
+			delete list;
+		}
+
 		TEST_METHOD(LengtTesting_FullList_Success)
 		{
 			//Arrange

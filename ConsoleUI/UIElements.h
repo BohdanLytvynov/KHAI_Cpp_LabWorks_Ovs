@@ -142,13 +142,13 @@ namespace ui_controls
 			COORD position, shapes::Shape* shapeToDraw);
 	};
 
-	struct UI_CONTROLS_API View : public UIElement
+	struct View : public UIElement
 	{
-		View(const char* name, shapes::Shape* shape, COORD position);
+		UI_CONTROLS_API View(const char* name, shapes::Shape* shape, COORD position);
 
-		void Draw(graphics::ConsoleGraphics* graphics, COORD position) override;
+		UI_CONTROLS_API void Draw(graphics::ConsoleGraphics* graphics, COORD position) override;
 
-		const char* getName();
+		UI_CONTROLS_API const char* getName();
 
 	private:
 		std::vector<UIElement*> m_ui_elements;	
