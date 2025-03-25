@@ -43,6 +43,33 @@ namespace DirectoryStaticLibUT
 			Assert::IsTrue(res[4].getFileName() == L"file5.txt", incorrectFile);
 		}
 
+		TEST_METHOD(Path_Muatae_Test_Success1)
+		{
+			namespace fs = filesystem;
+
+			LPCTSTR path = TEXT("D:\\Folder1\\Folder2\\Folder3\\File1");
+			LPCTSTR success_result = TEXT("D:\\Folder1\\Folder2\\Folder3");
+		
+			TCHAR* result = fs::Path::Mutate(path, TEXT("Folder3"), TEXT("\\"));
+
+			Assert::IsTrue(lstrcmp(result, success_result) == 0, TEXT("Actual result is not the same as Success_Result!"));
+
+			free(result);
+		}
+
+		TEST_METHOD(Path_Muatae_Test_Success2)
+		{
+			namespace fs = filesystem;
+
+			LPCTSTR path = TEXT("D:\\Folder1\\Folder2\\Folder3\\File1");
+			LPCTSTR success_result = TEXT("D:\\Folder1");
+			
+			TCHAR* result = fs::Path::Mutate(path, TEXT("Folder1"), TEXT("\\"));
+
+			Assert::IsTrue(lstrcmp(result, success_result) == 0, TEXT("Actual result is not the same as Success_Result!"));
+			free(result);
+		}
+
 	private:		
 		LPCTSTR path = nullptr;
 	};

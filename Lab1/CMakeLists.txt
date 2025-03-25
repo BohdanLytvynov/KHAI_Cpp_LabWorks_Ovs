@@ -29,6 +29,19 @@ message("Linking DataStructures Library to the TARGET")
 target_link_libraries(Lab1 DataStructures)
 message("Linking DataStructures Library finished.")
 
+message("Creating Directory static library!")
+
+add_library(Directory 
+${CMAKE_HOME_DIRECTORY}/src/directory/Directory.h
+${CMAKE_HOME_DIRECTORY}/src/directory/Directory.cpp
+${CMAKE_HOME_DIRECTORY}/src/directory/pch.h
+${CMAKE_HOME_DIRECTORY}/src/directory/pch.cpp)
+message("Directory Library created.")
+message("Linking Directory Library to the TARGET")
+
+target_link_libraries(Lab1 Directory)
+message("Linking DataStructures Library finished.")
+
 message("Searching for required Boost packages...")
 message("Scanning your environment for boostRoot environment variable...")
 if($ENV{boostRoot} STREQUAL "")

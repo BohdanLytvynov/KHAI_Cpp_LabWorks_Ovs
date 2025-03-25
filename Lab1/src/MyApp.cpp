@@ -7,6 +7,7 @@
 #include<fstream>
 #include"JSHelper.h"
 #include <AppCore/JSHelpers.h>
+#include "../src/directory/Directory.h"
 
 #define WINDOW_WIDTH  800
 #define WINDOW_HEIGHT 400

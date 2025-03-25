@@ -7,7 +7,7 @@ std::vector<filesystem::FileData> filesystem::Directory::GetFiles(LPCTSTR Abs_pa
 
 	if (lstrlen(Abs_path) == 0)
 		throw std::exception("Parameter path was empty!");
-
+	
 	std::vector<filesystem::FileData> res;
 
 	HANDLE hFind = INVALID_HANDLE_VALUE;
@@ -29,10 +29,10 @@ std::vector<filesystem::FileData> filesystem::Directory::GetFiles(LPCTSTR Abs_pa
 			break;
 		}
 		if (i == 1 || i == 2)
-		{
+		{			
 			continue;
-		}
-
+		}		
+		
 		fs::FileData fd = fs::ToFileData(&ffd);
 
 		res.push_back(fd);
@@ -40,20 +40,20 @@ std::vector<filesystem::FileData> filesystem::Directory::GetFiles(LPCTSTR Abs_pa
 	} while (FindNextFile(hFind, &ffd));
 
 	FindClose(hFind);
-
+	
 	return res;
 }
 
 filesystem::FileData::FileData(
-	DWORD dwFileAttributes,
-	FILETIME ftCreationTime,
-	FILETIME ftLastAccessTime,
-	FILETIME ftLastWriteTime,
-	DWORD nFileSizeHigh,
-	DWORD nFileSizeLow,
-	DWORD dwReserved0,
-	DWORD dwReserved1,
-	TCHAR* cFileName,
+	DWORD dwFileAttributes, 
+	FILETIME ftCreationTime, 
+	FILETIME ftLastAccessTime, 
+	FILETIME ftLastWriteTime, 
+	DWORD nFileSizeHigh, 
+	DWORD nFileSizeLow, 
+	DWORD dwReserved0, 
+	DWORD dwReserved1, 
+	TCHAR* cFileName, 
 	TCHAR* cAlternateFileName) :
 	m_dwFileAttributes(dwFileAttributes),
 	m_ftCreationTime(ftCreationTime),
@@ -62,7 +62,7 @@ filesystem::FileData::FileData(
 	m_nFileSizeHigh(nFileSizeHigh),
 	m_nFileSizeLow(nFileSizeLow),
 	m_dwReserved0(dwReserved0),
-	m_dwReserved1(dwReserved1)
+	m_dwReserved1(dwReserved1)	
 {
 	m_cFileName = std::wstring(cFileName);
 
@@ -151,7 +151,7 @@ filesystem::FileData& filesystem::FileData::operator=(const FileData& other)
 
 filesystem::FileData filesystem::ToFileData(WIN32_FIND_DATA* fd)
 {
-	return FileData(fd->dwFileAttributes,
+	return FileData(fd->dwFileAttributes, 
 		fd->ftCreationTime,
 		fd->ftLastAccessTime,
 		fd->ftLastWriteTime,
@@ -161,64 +161,4 @@ filesystem::FileData filesystem::ToFileData(WIN32_FIND_DATA* fd)
 		fd->dwReserved1,
 		fd->cFileName,
 		fd->cAlternateFileName);
-}
-
-LPTSTR filesystem::Path::Mutate(LPCTSTR path, LPCTSTR stopWord, LPCTSTR delim)
-{
-	if (path == nullptr)
-		throw std::exception("Path pointer was nullptr!");
-
-	if (stopWord == nullptr)
-		throw std::exception("stopWord parameter was nullptr!");
-
-	if (delim == nullptr)
-		throw std::exception("delim parameter was nullptr!");
-
-	size_t length = lstrlen(path);
-	unsigned char delimCountTemp = 0;
-	std::vector<TCHAR> res_g;
-	std::vector<TCHAR> word_temp;
-	for (size_t i = 0; i < length; i++)
-	{
-		if (path[i] == *delim)
-		{
-			word_temp.push_back('\0');
-			size_t l = word_temp.size();
-
-			TCHAR* wordForCompare = new TCHAR[word_temp.size()];
-			
-			for (size_t i = 0; i < l; i++)
-			{
-				wordForCompare[i] = word_temp[i];
-			}
-
-			if (lstrcmp(wordForCompare, stopWord) == 0)
-			{
-				delete[] wordForCompare;
-				break;
-			}
-						
-			word_temp.clear();
-			delete[] wordForCompare;
-		}
-		else
-		{
-			word_temp.push_back(path[i]);
-		}
-
-		res_g.push_back(path[i]);
-	}
-	word_temp.clear();
-	res_g.push_back('\0');
-	size_t size = res_g.size();
-
-	LPTSTR result = (TCHAR*)malloc(size* sizeof(TCHAR*));
-
-	for (size_t i = 0; i < size; i++)
-	{		
-		result[i] = res_g[i];
-	}
-	res_g.clear();
-
-	return result;
 }
