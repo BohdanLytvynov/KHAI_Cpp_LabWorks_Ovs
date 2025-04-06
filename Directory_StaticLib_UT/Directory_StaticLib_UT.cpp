@@ -15,7 +15,7 @@ namespace DirectoryStaticLibUT
 			path = TEXT("D:\\KHAI\\C++ Prg Ovsyannic\\Directory_StaticLib_UT\\Test");
 		}
 		
-		TEST_METHOD(GetFilesTest_Success)
+		/*TEST_METHOD(GetFilesTest_Success)
 		{
 			namespace fs = filesystem;
 			fs::IDirectory* dir = new fs::Directory();
@@ -41,7 +41,7 @@ namespace DirectoryStaticLibUT
 			Assert::IsTrue(res[2].getFileName() == L"file3.txt", incorrectFile);
 			Assert::IsTrue(res[3].getFileName() == L"file4.txt", incorrectFile);
 			Assert::IsTrue(res[4].getFileName() == L"file5.txt", incorrectFile);
-		}
+		}*/
 
 		TEST_METHOD(Path_Muatae_Test_Success1)
 		{

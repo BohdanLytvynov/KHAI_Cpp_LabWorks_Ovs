@@ -5,7 +5,9 @@
 #include<vector>
 namespace filesystem
 {
-	struct FileData;
+	struct FileDataBase;
+	struct FileDataA;
+	struct FileDataW;
 
 	struct Path
 	{
@@ -21,22 +23,22 @@ namespace filesystem
 
 	struct IDirectory
 	{
-		virtual std::vector<FileData> GetFiles(LPCTSTR Abs_path, DWORD& error) = 0;
+		virtual std::vector<FileDataA> GetFilesA(LPCSTR Abs_path, DWORD& error) = 0;
+
+		virtual std::vector<FileDataW> GetFilesW(LPCTSTR Abs_path, DWORD& error) = 0;
 	};
 
-	struct FileData
+	struct FileDataBase
 	{
-		FileData(DWORD dwFileAttributes,
-		FILETIME ftCreationTime,
-		FILETIME ftLastAccessTime,
-		FILETIME ftLastWriteTime,
-		DWORD nFileSizeHigh,
-		DWORD nFileSizeLow,
-		DWORD dwReserved0,
-		DWORD dwReserved1,
-		TCHAR* cFileName,
-		TCHAR* cAlternateFileName);
-
+		FileDataBase(DWORD dwFileAttributes,
+			FILETIME ftCreationTime,
+			FILETIME ftLastAccessTime,
+			FILETIME ftLastWriteTime,
+			DWORD nFileSizeHigh,
+			DWORD nFileSizeLow,
+			DWORD dwReserved0,
+			DWORD dwReserved1);
+		
 		DWORD getFileAttributes() const noexcept;
 		FILETIME getCreationTime() const noexcept;
 		FILETIME getLastAccessTime() const noexcept;
@@ -45,12 +47,6 @@ namespace filesystem
 		DWORD getFileSizeLow() const noexcept;
 		DWORD getReserved0() const noexcept;
 		DWORD getReserved1() const noexcept;
-		const std::wstring& getFileName() const noexcept;
-		const std::wstring& getAlternateFileName() const noexcept;
-
-		FileData(const FileData& other);
-
-		FileData& operator = (const FileData& other);	
 
 	private:
 		DWORD m_dwFileAttributes;
@@ -61,15 +57,59 @@ namespace filesystem
 		DWORD m_nFileSizeLow;
 		DWORD m_dwReserved0;
 		DWORD m_dwReserved1;
+	};
+
+	struct FileDataW : public FileDataBase
+	{
+		FileDataW(DWORD dwFileAttributes,
+			FILETIME ftCreationTime,
+			FILETIME ftLastAccessTime,
+			FILETIME ftLastWriteTime,
+			DWORD nFileSizeHigh,
+			DWORD nFileSizeLow,
+			DWORD dwReserved0,
+			DWORD dwReserved1,
+		WCHAR* cFileName,
+		WCHAR* cAlternateFileName);
+		
+		static FileDataW FromWin32FindDataW(WIN32_FIND_DATAW* data);
+
+		const std::wstring& getFileName() const noexcept;
+		const std::wstring& getAlternateFileName() const noexcept;
+		
+	private:		
 		std::wstring m_cFileName;
 		std::wstring m_cAlternateFileName;
 	};
 
-	FileData ToFileData(WIN32_FIND_DATA* fde);
+	struct FileDataA : public FileDataBase
+	{
+		FileDataA(DWORD dwFileAttributes,
+			FILETIME ftCreationTime,
+			FILETIME ftLastAccessTime,
+			FILETIME ftLastWriteTime,
+			DWORD nFileSizeHigh,
+			DWORD nFileSizeLow,
+			DWORD dwReserved0,
+			DWORD dwReserved1,
+			CHAR* cFileName,
+			CHAR* cAlternateFileName);
 
+		static FileDataA FromWin32FindDataA(WIN32_FIND_DATAA* data);
+
+		const std::string& getFileName() const noexcept;
+		const std::string& getAlternateFileName() const noexcept;
+		
+	private:
+		std::string m_cFileName;
+		std::string m_cAlternateFileName;
+	};
+	
 	struct Directory : public IDirectory
 	{
-		std::vector<FileData> GetFiles(LPCTSTR Abs_path, DWORD& error) override;
+		std::vector<FileDataW> GetFilesW(LPCTSTR Abs_path, DWORD& error) override;
+
+		std::vector<FileDataA> GetFilesA(LPCSTR Abs_path, DWORD& error) override;
 	};
 }
 
