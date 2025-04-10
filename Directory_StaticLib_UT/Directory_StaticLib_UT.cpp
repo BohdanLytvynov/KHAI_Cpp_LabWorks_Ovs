@@ -12,7 +12,7 @@ namespace DirectoryStaticLibUT
 
 		DirectoryStaticLibUT()
 		{
-			path = TEXT("D:\\KHAI\\C++ Prg Ovsyannic\\Directory_StaticLib_UT\\Test");
+			path = TEXT("D:\\KHAI\\KHAI_Cpp_LabWorks_Ovs\\Directory_StaticLib_UT\\Test");
 		}
 		
 		TEST_METHOD(GetFilesTest_Success)
@@ -36,11 +36,11 @@ namespace DirectoryStaticLibUT
 
 			const wchar_t* incorrectFile = TEXT("Fail to find the test file!");
 
-			Assert::IsTrue(res[0].getFileName() == L"file1.txt", incorrectFile);
-			Assert::IsTrue(res[1].getFileName() == L"file2.txt", incorrectFile);
-			Assert::IsTrue(res[2].getFileName() == L"file3.txt", incorrectFile);
-			Assert::IsTrue(res[3].getFileName() == L"file4.txt", incorrectFile);
-			Assert::IsTrue(res[4].getFileName() == L"file5.txt", incorrectFile);
+			Assert::IsTrue(lstrcmp(res[0].cFileName, L"file1.txt") == 0, incorrectFile);
+			Assert::IsTrue(lstrcmp(res[1].cFileName, L"file2.txt") == 0, incorrectFile);
+			Assert::IsTrue(lstrcmp(res[2].cFileName, L"file3.txt") == 0, incorrectFile);
+			Assert::IsTrue(lstrcmp(res[3].cFileName, L"file4.txt") == 0, incorrectFile);
+			Assert::IsTrue(lstrcmp(res[4].cFileName, L"file5.txt") == 0, incorrectFile);
 		}
 
 		TEST_METHOD(Path_Muatae_Test_Success1)

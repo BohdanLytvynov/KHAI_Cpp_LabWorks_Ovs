@@ -6,6 +6,7 @@
 #include"../ConsoleUI/console_ui.h"
 #include"../ConsoleUI/Shapes.h"
 #include"../ConsoleUI/UIElements.h"
+#include"../Directory_StaticLib/Directory.h"
 
 io::ConsoleInputOutput* IO;
 graphics::ConsoleGraphics* g;
