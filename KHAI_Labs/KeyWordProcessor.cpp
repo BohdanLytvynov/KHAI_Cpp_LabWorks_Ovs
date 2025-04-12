@@ -8,7 +8,7 @@ KeyWordProcessorBase::KeyWordProcessorBase()
 SingleKeyWordProcessorBase::SingleKeyWordProcessorBase():m_keyWord("")
 {}
 
-SingleKeyWordProcessorBase::SingleKeyWordProcessorBase(std::string& keyWord):m_keyWord(keyWord)
+SingleKeyWordProcessorBase::SingleKeyWordProcessorBase(const std::string& keyWord):m_keyWord(keyWord)
 {}
 
 std::string& SingleKeyWordProcessorBase::getKeyWord()
@@ -31,12 +31,12 @@ std::vector<std::string>& MultipleKeyWordProcessorBase::getKeyWords()
 
 
 ////////////////////////Struct Class Processor
-StructClassKeyWordProcessor::StructClassKeyWordProcessor(std::string& keyWord) 
+StructClassKeyWordProcessor::StructClassKeyWordProcessor(const std::string& keyWord) 
 	: SingleKeyWordProcessorBase(keyWord)
 {
 }
 
-void StructClassKeyWordProcessor::Process(std::string& line, Object* object)
+bool StructClassKeyWordProcessor::Process(std::string& line, Object* object)
 {
 	if (LineProcessorHelper::LineContains(line, SingleKeyWordProcessorBase::getKeyWord()))
 	{
@@ -44,10 +44,19 @@ void StructClassKeyWordProcessor::Process(std::string& line, Object* object)
 
 		if (words.size() == 2)
 		{
+			if (words[1].find("{") != std::string::npos)
+			{
+				words[1].erase(words[1].end() - 1);
+			}
+
 			object->setName(words[1]);
 			object->isStruct() = true;
+
+			return true;
 		}
 	}
+
+	return false;
 }
 //////////////////Type Processor
 
@@ -58,15 +67,23 @@ TypeKeyWordProcessor::TypeKeyWordProcessor(std::vector<std::string> keyWords)
 TypeKeyWordProcessor::TypeKeyWordProcessor():MultipleKeyWordProcessorBase()
 {}
 
-void TypeKeyWordProcessor::Process(std::string & line, Object * object)
+bool TypeKeyWordProcessor::Process(std::string & line, Object * object)
 {
 	auto keywords = MultipleKeyWordProcessorBase::getKeyWords();
 
-	auto res = LineProcessorHelper::GetTypeAndNameFromLine(line, keywords, *" ", *";");
+	auto res = LineProcessorHelper::GetTypeAndNameFromLine(line, keywords, " ", ";");
 
-	Field f(res[1], res[0]);
+	if (res.size() == 2)
+	{
+		Field f(res[1], res[0]);
 
-	object->getFields().push_back(f);
+		object->getFields().push_back(f);
+
+		return true;
+	}
+
+	return false;
+	
 }
 
 

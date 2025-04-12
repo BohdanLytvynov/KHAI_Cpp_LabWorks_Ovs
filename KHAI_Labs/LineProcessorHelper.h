@@ -12,7 +12,7 @@ struct LineProcessorHelper
 	static std::vector<std::string> SplitLine(const std::string& line, const char delim);
 
 	static std::vector<std::string> GetTypeAndNameFromLine(std::string& line, 
-		std::vector<std::string>& keyWords, const char delim, const char end);
+		std::vector<std::string>& keyWords, const char* delim, const char* end);
 };
 
 #endif

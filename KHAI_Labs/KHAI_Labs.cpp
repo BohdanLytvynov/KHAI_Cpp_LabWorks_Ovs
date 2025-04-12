@@ -6,14 +6,23 @@
 #include"Object.h"
 #include<vector>
 #include"Field.h"
+#include"FileProcessor.h"
+#include "FileBuilderBase.h"
+#include "LineProcessorHelper.h"
 
+std::string GetFilename(std::string& path)
+{
+    auto arr = LineProcessorHelper::SplitLine(path, *"\\");
+
+    return *(arr.end() - 1);
+}
 
 int main()
-{
+{    
     using namespace std;
 
-    string pathToFile;
-
+    string pathToFile;    
+  
     int flag = _CrtSetDbgFlag(_CRTDBG_REPORT_FLAG);
     flag |= _CRTDBG_LEAK_CHECK_DF;
     _CrtSetDbgFlag(flag);
@@ -24,10 +33,24 @@ int main()
     printf("\tЛабораторна робота номер 2 ІЗВП Варіант 9\n\n");
     printf("\tНеобхідно розробити программу, що Вичитує файл з декларейшинами (long int*, double*, double) та розширює його за допомогою дефінішенів та створює деструктор.\n\n");
 
+    //Configure And Setup Processing Pipeline
+
+    vector<string> keyWords = {"long", "int", "int*", "double", "double*" , "*"};
+
+    vector<KeyWordProcessorBase*> processors;
+
+    processors.push_back(new StructClassKeyWordProcessor("struct"));
+    processors.push_back(new StructClassKeyWordProcessor("class"));
+    processors.push_back(new TypeKeyWordProcessor(keyWords));
+
+    unique_ptr<FileProcessor> fileProcessor = make_unique<FileProcessor>(processors);
+  
     //Main Cycle
 
     do
     {
+        Object obj;
+
         printf("\tВведіть абсолютний шлях до файла із классом або структурою та натисніть клавішу Ентер\n");
         printf("\tЯкщо ви хочете вийти з программи натисніть клавішу q\n");
 
@@ -37,24 +60,101 @@ int main()
 
         fstream fileStream;
 
+        string filename = GetFilename(pathToFile);
+
         fileStream.open(pathToFile.c_str(), ios::in);
 
         pathCorrect = fileStream.is_open();
 
         if (pathCorrect)
         {
-            char line[2048];
-
-            //Process file
-            while (!fileStream.eof())
+            fileProcessor->ProcessFile(&fileStream, &obj);
+            fileStream.close();
+            
+            printf("Обробка файла Завершена!\n");
+            auto fields = obj.getFields();
+            if (fields.size() == 0)
             {
-                fileStream.getline(line, sizeof(line));
+                printf("НАЖАЛЬ не вдалося знайти ніяких полів!\n\n");
+            }
+            else
+            {
+                printf("Було знайдено наступні поля:\n");
 
+                int i = 1;
+                for (auto field : fields)
+                    printf("\t%d) %s\n", i++, field.ToString().c_str());
 
+                printf("Введіть шлях де ви хочете створити *.h файл та натисніть Enter:\n");
+
+                getline(cin, pathToFile);
+
+                ofstream outFileStream((pathToFile + "\\" + filename).c_str(), std::ios::app);
+
+                bool cppBuildPossible = false;
+
+                if (outFileStream.is_open())
+                {
+                    printf("Створюю новий *.h файл...\n\n");
+
+                    auto fb = FileBuilderFactory::getFileBuilder(FileType::h);
+
+                    fb->SetupBuilder(&outFileStream, &filename, &obj);
+
+                    fb->Build();
+
+                    printf("Створення *.h файлу завершено.\n\n");
+
+                    cppBuildPossible = true;
+
+                    outFileStream.close();
+                }
+                else
+                {
+                    printf("Помилка під час створення *.h файла!\n");
+                }
+
+                bool testcompilePossible = false;
+
+                if (cppBuildPossible)
+                {
+                    printf("Введіть шлях де ви хочете створити *.cpp файл та натисніть Enter:\n");
+
+                    getline(cin, pathToFile);
+
+                    outFileStream.open(pathToFile.c_str(), std::ios::app);
+
+                    if (outFileStream.is_open())
+                    {
+                        printf("Створюю новий *.cpp файл...\n\n");
+
+                        auto fb = FileBuilderFactory::getFileBuilder(FileType::cpp);
+
+                        fb->SetupBuilder(&outFileStream, &filename, &obj);
+
+                        fb->Build();
+
+                        printf("Створення *.h файлу завершено.\n\n");
+
+                        testcompilePossible = true;
+
+                        outFileStream.close();
+                    }
+                    else
+                    {
+                        printf("Помилка під час створення *.cpp файла!\n");
+                    }
+                }
+
+                if (testcompilePossible)
+                {
+                    //Compile to test
+                }
             }
         }
         else
         {
+            fileStream.close();
             printf("\tПомилка сталася під час відкриття файла!\n");
         }
 
@@ -64,6 +164,11 @@ int main()
             break;
         }
     } while (true);
+
+    for (auto p : processors)
+    {
+        delete p;
+    }
 
     return 0;
 }

@@ -2,7 +2,9 @@
 
 bool LineProcessorHelper::LineContains(const std::string& line, const std::string& word)
 {
-    return line.find(word) > 0;
+	size_t count = line.find(word);
+
+    return count != std::string::npos;
 }
 
 std::vector<std::string> LineProcessorHelper::SplitLine(const std::string& line, const char delim)
@@ -23,39 +25,46 @@ std::vector<std::string> LineProcessorHelper::SplitLine(const std::string& line,
 
 std::vector<std::string> LineProcessorHelper::GetTypeAndNameFromLine(std::string& line,
 	std::vector<std::string>& keyWords, 
-	const char delim, const char end)
+	const char* delim, const char* end)
 {
 	std::vector<std::string> res;
 	std::string type("");
 	std::string name("");
 	std::string word("");
-
-	for (char c : line)
+	char temp[2];
+	for (const char c : line)
 	{
+		temp[0] = c;
+		temp[1] = *"\0";
+	
 		//We have found the delimeter word ready for compare
-		if (strcmp(&c, &delim) == 0)
+		if (strcmp(temp, delim) == 0)
 		{
 			for (auto w : keyWords)
 			{
 				if (word.compare(w) == 0)//Some type found
 				{
 					type += word + " ";
-					word.clear();
+					break;
 				}
 			}
+
+			word.clear();
 		}
-		else if (strcmp(&c, &end))
+		else if (strcmp(temp, end) == 0)
 		{
-			name.append(word);
+			name += word;
 		}
 		else
 		{
-			word.append(&c);
+			word += c;
 		}
 	}
+	if(type.size() > 0)
+		res.push_back(type);
 
-	res.push_back(type);
-	res.push_back(name);
+	if(type.size() > 0)
+		res.push_back(name);
 
 	return res;
 }

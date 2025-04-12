@@ -8,11 +8,13 @@ struct Field
 {
 	Field();
 
-	std::string& getName() noexcept;
+	const std::string& getName() const noexcept;
 
-	std::string& getType() noexcept;
+	const std::string& getType() const noexcept;
 	
 	Field(const std::string& name, const std::string& type);
+
+	std::string ToString() const;
 private:
 	std::string m_name;
 	std::string m_type;	

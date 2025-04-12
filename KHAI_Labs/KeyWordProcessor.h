@@ -11,14 +11,14 @@ struct KeyWordProcessorBase
 {
 	KeyWordProcessorBase();
 	
-	virtual void Process(std::string& line, Object* object) = 0;
+	virtual bool Process(std::string& line, Object* object) = 0;
 };
 
 struct SingleKeyWordProcessorBase : public KeyWordProcessorBase
 {
 	SingleKeyWordProcessorBase();
 
-	SingleKeyWordProcessorBase(std::string& keyWord);
+	SingleKeyWordProcessorBase(const std::string& keyWord);
 
 protected:
 	std::string& getKeyWord();
@@ -46,9 +46,9 @@ private:
 
 struct StructClassKeyWordProcessor : public SingleKeyWordProcessorBase
 {
-	StructClassKeyWordProcessor(std::string& keyWord);
+	StructClassKeyWordProcessor(const std::string& keyWord);
 
-	void Process(std::string& line, Object* object) override;
+	bool Process(std::string& line, Object* object) override;
 };
 
 //Handle types
@@ -59,7 +59,7 @@ struct TypeKeyWordProcessor : public MultipleKeyWordProcessorBase
 
 	TypeKeyWordProcessor();
 
-	void Process(std::string& line, Object* object) override;
+	bool Process(std::string& line, Object* object) override;
 };
 
 

@@ -2,6 +2,7 @@
 
 struct Example
 {
+
 private:
 	long int* field1;
 
