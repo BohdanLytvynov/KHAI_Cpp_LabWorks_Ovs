@@ -134,7 +134,7 @@ int main()
 
                         fb->Build();
 
-                        printf("Створення *.h файлу завершено.\n\n");
+                        printf("Створення *.cpp файлу завершено.\n\n");
 
                         testcompilePossible = true;
 
