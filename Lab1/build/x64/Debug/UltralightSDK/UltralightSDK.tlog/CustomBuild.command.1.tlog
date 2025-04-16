@@ -1,0 +1,136 @@
+^C:\USERS\ADMINISTRATOR\PROJECTS\C++\KHAI_CPP_LABWORKS_OVS\LAB1\BUILD\CMAKEFILES\E6FF4937C078E4C342D3B72F1133FD9D\ULTRALIGHTSDK-MKDIR.RULE
+setlocal
+"C:\Program Files\CMake\bin\cmake.exe" -Dcfgdir=/Debug -P C:/Users/Administrator/Projects/C++/KHAI_Cpp_LabWorks_Ovs/Lab1/build/UltralightSDK-prefix/tmp/UltralightSDK-mkdirs.cmake
+if %errorlevel% neq 0 goto :cmEnd
+"C:\Program Files\CMake\bin\cmake.exe" -E touch C:/Users/Administrator/Projects/C++/KHAI_Cpp_LabWorks_Ovs/Lab1/build/UltralightSDK-prefix/src/UltralightSDK-stamp/Debug/UltralightSDK-mkdir
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd
+^C:\USERS\ADMINISTRATOR\PROJECTS\C++\KHAI_CPP_LABWORKS_OVS\LAB1\BUILD\CMAKEFILES\E6FF4937C078E4C342D3B72F1133FD9D\ULTRALIGHTSDK-DOWNLOAD.RULE
+setlocal
+cd C:\Users\Administrator\Projects\C++\KHAI_Cpp_LabWorks_Ovs\Lab1\build
+if %errorlevel% neq 0 goto :cmEnd
+C:
+if %errorlevel% neq 0 goto :cmEnd
+"C:\Program Files\CMake\bin\cmake.exe" -DCMAKE_MESSAGE_LOG_LEVEL=VERBOSE -P C:/Users/Administrator/Projects/C++/KHAI_Cpp_LabWorks_Ovs/Lab1/build/UltralightSDK-prefix/src/UltralightSDK-stamp/download-UltralightSDK.cmake
+if %errorlevel% neq 0 goto :cmEnd
+"C:\Program Files\CMake\bin\cmake.exe" -DCMAKE_MESSAGE_LOG_LEVEL=VERBOSE -P C:/Users/Administrator/Projects/C++/KHAI_Cpp_LabWorks_Ovs/Lab1/build/UltralightSDK-prefix/src/UltralightSDK-stamp/verify-UltralightSDK.cmake
+if %errorlevel% neq 0 goto :cmEnd
+"C:\Program Files\CMake\bin\cmake.exe" -DCMAKE_MESSAGE_LOG_LEVEL=VERBOSE -P C:/Users/Administrator/Projects/C++/KHAI_Cpp_LabWorks_Ovs/Lab1/build/UltralightSDK-prefix/src/UltralightSDK-stamp/extract-UltralightSDK.cmake
+if %errorlevel% neq 0 goto :cmEnd
+"C:\Program Files\CMake\bin\cmake.exe" -E touch C:/Users/Administrator/Projects/C++/KHAI_Cpp_LabWorks_Ovs/Lab1/build/UltralightSDK-prefix/src/UltralightSDK-stamp/Debug/UltralightSDK-download
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd
+^C:\USERS\ADMINISTRATOR\PROJECTS\C++\KHAI_CPP_LABWORKS_OVS\LAB1\BUILD\CMAKEFILES\E6FF4937C078E4C342D3B72F1133FD9D\ULTRALIGHTSDK-UPDATE.RULE
+setlocal
+"C:\Program Files\CMake\bin\cmake.exe" -E echo_append
+if %errorlevel% neq 0 goto :cmEnd
+"C:\Program Files\CMake\bin\cmake.exe" -E touch C:/Users/Administrator/Projects/C++/KHAI_Cpp_LabWorks_Ovs/Lab1/build/UltralightSDK-prefix/src/UltralightSDK-stamp/Debug/UltralightSDK-update
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd
+^C:\USERS\ADMINISTRATOR\PROJECTS\C++\KHAI_CPP_LABWORKS_OVS\LAB1\BUILD\CMAKEFILES\E6FF4937C078E4C342D3B72F1133FD9D\ULTRALIGHTSDK-PATCH.RULE
+setlocal
+"C:\Program Files\CMake\bin\cmake.exe" -E echo_append
+if %errorlevel% neq 0 goto :cmEnd
+"C:\Program Files\CMake\bin\cmake.exe" -E touch C:/Users/Administrator/Projects/C++/KHAI_Cpp_LabWorks_Ovs/Lab1/build/UltralightSDK-prefix/src/UltralightSDK-stamp/Debug/UltralightSDK-patch
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd
+^C:\USERS\ADMINISTRATOR\PROJECTS\C++\KHAI_CPP_LABWORKS_OVS\LAB1\BUILD\CMAKEFILES\E6FF4937C078E4C342D3B72F1133FD9D\ULTRALIGHTSDK-CONFIGURE.RULE
+setlocal
+cd C:\Users\Administrator\Projects\C++\KHAI_Cpp_LabWorks_Ovs\Lab1\build\SDK
+if %errorlevel% neq 0 goto :cmEnd
+C:
+if %errorlevel% neq 0 goto :cmEnd
+"C:\Program Files\CMake\bin\cmake.exe" -E echo_append
+if %errorlevel% neq 0 goto :cmEnd
+"C:\Program Files\CMake\bin\cmake.exe" -E touch C:/Users/Administrator/Projects/C++/KHAI_Cpp_LabWorks_Ovs/Lab1/build/UltralightSDK-prefix/src/UltralightSDK-stamp/Debug/UltralightSDK-configure
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd
+^C:\USERS\ADMINISTRATOR\PROJECTS\C++\KHAI_CPP_LABWORKS_OVS\LAB1\BUILD\CMAKEFILES\E6FF4937C078E4C342D3B72F1133FD9D\ULTRALIGHTSDK-BUILD.RULE
+setlocal
+cd C:\Users\Administrator\Projects\C++\KHAI_Cpp_LabWorks_Ovs\Lab1\build\SDK
+if %errorlevel% neq 0 goto :cmEnd
+C:
+if %errorlevel% neq 0 goto :cmEnd
+"C:\Program Files\CMake\bin\cmake.exe" -E echo_append
+if %errorlevel% neq 0 goto :cmEnd
+"C:\Program Files\CMake\bin\cmake.exe" -E touch C:/Users/Administrator/Projects/C++/KHAI_Cpp_LabWorks_Ovs/Lab1/build/UltralightSDK-prefix/src/UltralightSDK-stamp/Debug/UltralightSDK-build
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd
+^C:\USERS\ADMINISTRATOR\PROJECTS\C++\KHAI_CPP_LABWORKS_OVS\LAB1\BUILD\CMAKEFILES\E6FF4937C078E4C342D3B72F1133FD9D\ULTRALIGHTSDK-INSTALL.RULE
+setlocal
+cd C:\Users\Administrator\Projects\C++\KHAI_Cpp_LabWorks_Ovs\Lab1\build\SDK
+if %errorlevel% neq 0 goto :cmEnd
+C:
+if %errorlevel% neq 0 goto :cmEnd
+"C:\Program Files\CMake\bin\cmake.exe" -E echo_append
+if %errorlevel% neq 0 goto :cmEnd
+"C:\Program Files\CMake\bin\cmake.exe" -E touch C:/Users/Administrator/Projects/C++/KHAI_Cpp_LabWorks_Ovs/Lab1/build/UltralightSDK-prefix/src/UltralightSDK-stamp/Debug/UltralightSDK-install
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd
+^C:\USERS\ADMINISTRATOR\PROJECTS\C++\KHAI_CPP_LABWORKS_OVS\LAB1\BUILD\CMAKEFILES\A37112AD673381EEA1F9C259B2AE8A31\ULTRALIGHTSDK-COMPLETE.RULE
+setlocal
+"C:\Program Files\CMake\bin\cmake.exe" -E make_directory C:/Users/Administrator/Projects/C++/KHAI_Cpp_LabWorks_Ovs/Lab1/build/CMakeFiles/Debug
+if %errorlevel% neq 0 goto :cmEnd
+"C:\Program Files\CMake\bin\cmake.exe" -E touch C:/Users/Administrator/Projects/C++/KHAI_Cpp_LabWorks_Ovs/Lab1/build/CMakeFiles/Debug/UltralightSDK-complete
+if %errorlevel% neq 0 goto :cmEnd
+"C:\Program Files\CMake\bin\cmake.exe" -E touch C:/Users/Administrator/Projects/C++/KHAI_Cpp_LabWorks_Ovs/Lab1/build/UltralightSDK-prefix/src/UltralightSDK-stamp/Debug/UltralightSDK-done
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd
+^C:\USERS\ADMINISTRATOR\PROJECTS\C++\KHAI_CPP_LABWORKS_OVS\LAB1\BUILD\CMAKEFILES\6013678D6E2101A59A455DF0E9C25615\ULTRALIGHTSDK.RULE
+setlocal
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd
+^C:\USERS\ADMINISTRATOR\PROJECTS\C++\KHAI_CPP_LABWORKS_OVS\LAB1\CMAKELISTS.TXT
+setlocal
+"C:\Program Files\CMake\bin\cmake.exe" -SC:/Users/Administrator/Projects/C++/KHAI_Cpp_LabWorks_Ovs/Lab1 -BC:/Users/Administrator/Projects/C++/KHAI_Cpp_LabWorks_Ovs/Lab1/build --check-stamp-file C:/Users/Administrator/Projects/C++/KHAI_Cpp_LabWorks_Ovs/Lab1/build/CMakeFiles/generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd

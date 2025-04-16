@@ -1,0 +1,30 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="C:\Users\Administrator\Projects\C++\KHAI_Cpp_LabWorks_Ovs\Lab1\src\data_structures\data_structures.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\Administrator\Projects\C++\KHAI_Cpp_LabWorks_Ovs\Lab1\src\data_structures\pch.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="C:\Users\Administrator\Projects\C++\KHAI_Cpp_LabWorks_Ovs\Lab1\src\data_structures\data_structures.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Administrator\Projects\C++\KHAI_Cpp_LabWorks_Ovs\Lab1\src\data_structures\pch.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="C:\Users\Administrator\Projects\C++\KHAI_Cpp_LabWorks_Ovs\Lab1\CMakeLists.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{95A28032-1361-393B-B190-A4EFE059E219}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{D9EB5ED6-2B3D-35C5-BF30-03AD97BCB901}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

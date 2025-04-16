@@ -1,0 +1,10 @@
+^C:\USERS\ADMINISTRATOR\PROJECTS\C++\KHAI_CPP_LABWORKS_OVS\LAB1\CMAKELISTS.TXT
+setlocal
+"C:\Program Files\CMake\bin\cmake.exe" -SC:/Users/Administrator/Projects/C++/KHAI_Cpp_LabWorks_Ovs/Lab1 -BC:/Users/Administrator/Projects/C++/KHAI_Cpp_LabWorks_Ovs/Lab1/build --check-stamp-file C:/Users/Administrator/Projects/C++/KHAI_Cpp_LabWorks_Ovs/Lab1/build/CMakeFiles/generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd

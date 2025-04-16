@@ -1,6 +1,8 @@
 #include "FileBuilderBase.h"
 #include<algorithm>
 
+
+
 FileBuilderBase::FileBuilderBase()
 	: m_FileName(nullptr),
 	m_fileStream(nullptr),
@@ -54,6 +56,46 @@ Field* FileBuilderBase::ToArray(std::vector<Field> collection)
 	}
 
 	return nullptr;
+}
+
+std::vector<Field*> FileBuilderBase::CreateSignature(
+	std::ofstream* fstream,
+	std::string& funcName,
+	Field* parameters,
+	size_t start,
+	size_t end,
+	std::string returnType)
+{	
+	std::vector<Field*> result;
+
+	//Has return type
+	if (returnType.size() > 0)
+	{
+		*fstream << returnType << " ";
+	}
+
+	*fstream << funcName << "(";
+
+	if (parameters != nullptr)
+	{
+		for (size_t i = start; i < end; i++)
+		{
+			if (i == end - 1)
+			{
+				*fstream << parameters[i].getType() << parameters[i].getName();
+			}
+			else
+			{
+				*fstream << parameters[i].getType() << parameters[i].getName() << ", ";
+			}
+
+			result.push_back(parameters + i);
+		}
+	}
+
+	*fstream << funcName << ")";
+
+	return result;
 }
 
 //////////////////////HeaderFileBuilder
@@ -163,30 +205,9 @@ void HeaderFileBuilder::CreateFunctionDeclaration(
 {	
 	*fstream << "\t";
 
-	//Has return type
-	if (returnType.size() > 0)
-	{
-		*fstream << returnType << " ";
-	}
-
-	*fstream << funcName << "(";
-
-	if (parameters != nullptr)
-	{
-		for (size_t i = start; i < end; i++)
-		{
-			if (i == end - 1)
-			{
-				*fstream << parameters[i].getType() << parameters[i].getName();
-			}
-			else
-			{
-				*fstream << parameters[i].getType() << parameters[i].getName() << ", ";
-			}
-		}
-	}
+	CreateSignature(fstream, funcName, parameters, start, end, returnType);
 	
-	*fstream << ");" << std::endl;
+	*fstream << ";" << std::endl;
 }
 
 void HeaderFileBuilder::CreateField(std::ofstream* fstrean, Field* field)
@@ -207,7 +228,41 @@ CPPFileBuilder::~CPPFileBuilder()
 
 void CPPFileBuilder::Build()
 {
+	auto fstream = this->getFileStream();
+	auto fname = this->getFileName();
+	auto obj = this->getObject();
+	std::string prefix("~");
 
+	if (fstream->is_open())
+	{
+		*fstream << "#include" << fname << std::endl;
+
+
+	}
+
+	
+
+
+}
+
+void CPPFileBuilder::CreateFunctionDefinition(std::ofstream* fstream, 
+	std::string& funcName, CreateBody createBodyFunction,
+	Field* parameters, 
+	size_t start, 
+	size_t end, 
+	std::string returnType)
+{
+	auto paramsTemp = FileBuilderBase::CreateSignature(fstream, funcName, parameters, start, end, returnType);
+
+	createBodyFunction(fstream, paramsTemp, returnType);
+}
+
+void CPPFileBuilder::CreateGetterDefinition(Field* f)
+{
+}
+
+void CPPFileBuilder::CreateSetterDefinition(Field* f)
+{
 }
 
 std::unique_ptr<FileBuilderBase> FileBuilderFactory::getFileBuilder(FileType key)

@@ -1,0 +1,10 @@
+^C:\USERS\ADMINISTRATOR\PROJECTS\C++\KHAI_CPP_LABWORKS_OVS\LAB1\BUILD\CMAKEFILES\6013678D6E2101A59A455DF0E9C25615\GENERATE.STAMP.RULE
+setlocal
+"C:\Program Files\CMake\bin\cmake.exe" -SC:/Users/Administrator/Projects/C++/KHAI_Cpp_LabWorks_Ovs/Lab1 -BC:/Users/Administrator/Projects/C++/KHAI_Cpp_LabWorks_Ovs/Lab1/build --check-stamp-list CMakeFiles/generate.stamp.list --vs-solution-file C:/Users/Administrator/Projects/C++/KHAI_Cpp_LabWorks_Ovs/Lab1/build/Lab1.sln
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd

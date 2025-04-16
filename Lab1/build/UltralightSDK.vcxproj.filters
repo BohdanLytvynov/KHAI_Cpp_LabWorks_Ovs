@@ -1,0 +1,41 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <CustomBuild Include="C:\Users\Administrator\Projects\C++\KHAI_Cpp_LabWorks_Ovs\Lab1\build\CMakeFiles\e6ff4937c078e4c342d3b72f1133fd9d\UltralightSDK-mkdir.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+    <CustomBuild Include="C:\Users\Administrator\Projects\C++\KHAI_Cpp_LabWorks_Ovs\Lab1\build\CMakeFiles\e6ff4937c078e4c342d3b72f1133fd9d\UltralightSDK-download.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+    <CustomBuild Include="C:\Users\Administrator\Projects\C++\KHAI_Cpp_LabWorks_Ovs\Lab1\build\CMakeFiles\e6ff4937c078e4c342d3b72f1133fd9d\UltralightSDK-update.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+    <CustomBuild Include="C:\Users\Administrator\Projects\C++\KHAI_Cpp_LabWorks_Ovs\Lab1\build\CMakeFiles\e6ff4937c078e4c342d3b72f1133fd9d\UltralightSDK-patch.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+    <CustomBuild Include="C:\Users\Administrator\Projects\C++\KHAI_Cpp_LabWorks_Ovs\Lab1\build\CMakeFiles\e6ff4937c078e4c342d3b72f1133fd9d\UltralightSDK-configure.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+    <CustomBuild Include="C:\Users\Administrator\Projects\C++\KHAI_Cpp_LabWorks_Ovs\Lab1\build\CMakeFiles\e6ff4937c078e4c342d3b72f1133fd9d\UltralightSDK-build.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+    <CustomBuild Include="C:\Users\Administrator\Projects\C++\KHAI_Cpp_LabWorks_Ovs\Lab1\build\CMakeFiles\e6ff4937c078e4c342d3b72f1133fd9d\UltralightSDK-install.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+    <CustomBuild Include="C:\Users\Administrator\Projects\C++\KHAI_Cpp_LabWorks_Ovs\Lab1\build\CMakeFiles\a37112ad673381eea1f9c259b2ae8a31\UltralightSDK-complete.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+    <CustomBuild Include="C:\Users\Administrator\Projects\C++\KHAI_Cpp_LabWorks_Ovs\Lab1\build\CMakeFiles\6013678d6e2101a59a455df0e9c25615\UltralightSDK.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+    <CustomBuild Include="C:\Users\Administrator\Projects\C++\KHAI_Cpp_LabWorks_Ovs\Lab1\CMakeLists.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="C:\Users\Administrator\Projects\C++\KHAI_Cpp_LabWorks_Ovs\Lab1\build\CMakeFiles\UltralightSDK" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="CMake Rules">
+      <UniqueIdentifier>{95447540-ADEA-3D44-B911-AAD2DC4126AB}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

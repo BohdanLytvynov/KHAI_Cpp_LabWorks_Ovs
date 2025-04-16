@@ -1,0 +1,5 @@
+C:/Users/Administrator/Projects/C++/KHAI_Cpp_LabWorks_Ovs/Lab1/build/CMakeFiles/UltralightSDK.dir
+C:/Users/Administrator/Projects/C++/KHAI_Cpp_LabWorks_Ovs/Lab1/build/CMakeFiles/Lab1.dir
+C:/Users/Administrator/Projects/C++/KHAI_Cpp_LabWorks_Ovs/Lab1/build/CMakeFiles/DataStructures.dir
+C:/Users/Administrator/Projects/C++/KHAI_Cpp_LabWorks_Ovs/Lab1/build/CMakeFiles/ALL_BUILD.dir
+C:/Users/Administrator/Projects/C++/KHAI_Cpp_LabWorks_Ovs/Lab1/build/CMakeFiles/ZERO_CHECK.dir

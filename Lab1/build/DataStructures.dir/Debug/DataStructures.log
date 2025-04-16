@@ -1,0 +1,32 @@
+﻿  Building Custom Rule C:/Users/Administrator/Projects/C++/KHAI_Cpp_LabWorks_Ovs/Lab1/CMakeLists.txt
+  data_structures.cpp
+C:\Users\Administrator\Projects\C++\KHAI_Cpp_LabWorks_Ovs\Lab1\src\data_structures\data_structures.h(22,9): warning C4005: 'FAILED': macro redefinition
+  (compiling source file '../src/data_structures/data_structures.cpp')
+      C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\shared\winerror.h(29887,9):
+      see previous definition of 'FAILED'
+  
+C:\Users\Administrator\Projects\C++\KHAI_Cpp_LabWorks_Ovs\Lab1\src\data_structures\data_structures.cpp(5,26): warning C4273: 'add_tools::executor::execute': inconsistent dll linkage
+      C:\Users\Administrator\Projects\C++\KHAI_Cpp_LabWorks_Ovs\Lab1\src\data_structures\data_structures.h(34,7):
+      see previous definition of 'add_tools::executor::execute'
+  
+C:\Users\Administrator\Projects\C++\KHAI_Cpp_LabWorks_Ovs\Lab1\src\data_structures\data_structures.cpp(12,26): warning C4273: 'add_tools::executor::execute': inconsistent dll linkage
+      C:\Users\Administrator\Projects\C++\KHAI_Cpp_LabWorks_Ovs\Lab1\src\data_structures\data_structures.h(36,7):
+      see previous definition of 'add_tools::executor::execute'
+  
+C:\Users\Administrator\Projects\C++\KHAI_Cpp_LabWorks_Ovs\Lab1\src\data_structures\data_structures.cpp(19,26): warning C4273: 'add_tools::executor::executeInternal': inconsistent dll linkage
+      C:\Users\Administrator\Projects\C++\KHAI_Cpp_LabWorks_Ovs\Lab1\src\data_structures\data_structures.h(44,7):
+      see previous definition of 'add_tools::executor::executeInternal'
+  
+C:\Users\Administrator\Projects\C++\KHAI_Cpp_LabWorks_Ovs\Lab1\src\data_structures\data_structures.cpp(37,2): warning C4286: 'const std::runtime_error &': is caught by base class ('const std::exception &') on line 33
+C:\Users\Administrator\Projects\C++\KHAI_Cpp_LabWorks_Ovs\Lab1\src\data_structures\data_structures.cpp(49,22): warning C4273: 'add_tools::executor::executor': inconsistent dll linkage
+      C:\Users\Administrator\Projects\C++\KHAI_Cpp_LabWorks_Ovs\Lab1\src\data_structures\data_structures.h(38,3):
+      see previous definition of 'add_tools::executor::executor'
+  
+C:\Users\Administrator\Projects\C++\KHAI_Cpp_LabWorks_Ovs\Lab1\src\data_structures\data_structures.cpp(52,23): warning C4273: 'add_tools::executor::~executor': inconsistent dll linkage
+      C:\Users\Administrator\Projects\C++\KHAI_Cpp_LabWorks_Ovs\Lab1\src\data_structures\data_structures.h(40,4):
+      see previous definition of 'add_tools::executor::~executor'
+  
+  pch.cpp
+  Generating Code...
+     Creating library C:/Users/Administrator/Projects/C++/KHAI_Cpp_LabWorks_Ovs/Lab1/build/Debug/DataStructures.lib and object C:/Users/Administrator/Projects/C++/KHAI_Cpp_LabWorks_Ovs/Lab1/build/Debug/DataStructures.exp
+  DataStructures.vcxproj -> C:\Users\Administrator\Projects\C++\KHAI_Cpp_LabWorks_Ovs\Lab1\build\Debug\DataStructures.dll
