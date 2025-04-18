@@ -6,7 +6,9 @@
 #include <fstream>
 #include <map>
 
-typedef void (*CreateBody)(std::ofstream* fileStream, std::vector<Field*> paramsUsed, std::string& returnType);
+typedef void (*CreateBody)(std::ofstream* fileStream, 
+	std::vector<Field*> paramsUsed, 
+	std::string& returnType);
 
 enum DeleteType
 {
@@ -40,7 +42,8 @@ protected:
 		Field* parameters,
 		size_t start,
 		size_t end,
-		std::string returnType);
+		std::string returnType,
+		bool writeParams = true);
 
 private:	
 	std::ofstream* m_fileStream;
@@ -77,19 +80,19 @@ struct CPPFileBuilder : public FileBuilderBase
 	void Build() override;
 
 private:
+	std::map<int, bool> m_DestrHashTable;
+
+private:
 	void CreateFunctionDefinition(std::ofstream* fstream,
-		std::string& funcName, 
+		const std::string& objName,
+		const std::string& funcName, 
 		CreateBody createBodyFunction,
+		bool writeParams,
 		Field* parameters = nullptr,
 		size_t start = 0,
 		size_t end = 0,
 		std::string returnType = "");
 
-	void CreateGetterDefinition(Field* f, size_t count, std::string& );
-
-	void CreateSetterDefinition(Field* f);
-
-	void CreateDestructorDefinition(Field* f, size_t fieldCount, std::map<int, DeleteType>* hashTable);
 };
 
 struct FileBuilderFactory

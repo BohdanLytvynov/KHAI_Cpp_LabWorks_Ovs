@@ -4,9 +4,9 @@ struct Example
 {
 
 private:
-	long int* field1;
+	long int* field1;//@Destr(block)
 
-	double* field2;
+	double* field2;//@Destr(single)
 
 	double field3;
 };

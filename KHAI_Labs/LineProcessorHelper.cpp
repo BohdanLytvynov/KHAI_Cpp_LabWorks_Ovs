@@ -69,7 +69,30 @@ std::vector<std::string> LineProcessorHelper::GetTypeAndNameFromLine(std::string
 	return res;
 }
 
+bool LineProcessorHelper::HasAttribute(std::string& line, const std::string& attribute)
+{
+	if (line.find("@") == std::string::npos)
+		return false;
 
+	if (line.find(attribute) == std::string::npos)
+		return false;
 
+	return true;
+}
 
+bool LineProcessorHelper::TryGetAttributeValue(std::string& line,
+	const std::string& attribute, std::string& output)
+{	
+	if (LineProcessorHelper::HasAttribute(line, attribute))
+	{
+		size_t pos = line.find("(");
+		if (pos != std::string::npos)
+		{
+			output += line.substr(++pos, (line.size() - 1) - pos);
 
+			return true;
+		}
+	}
+
+	return false;
+}

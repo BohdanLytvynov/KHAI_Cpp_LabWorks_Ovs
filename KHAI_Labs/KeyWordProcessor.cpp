@@ -67,7 +67,7 @@ TypeKeyWordProcessor::TypeKeyWordProcessor(std::vector<std::string> keyWords)
 TypeKeyWordProcessor::TypeKeyWordProcessor():MultipleKeyWordProcessorBase()
 {}
 
-bool TypeKeyWordProcessor::Process(std::string & line, Object * object)
+bool TypeKeyWordProcessor::Process(std::string& line, Object * object)
 {
 	auto keywords = MultipleKeyWordProcessorBase::getKeyWords();
 
@@ -76,6 +76,15 @@ bool TypeKeyWordProcessor::Process(std::string & line, Object * object)
 	if (res.size() == 2)
 	{
 		Field f(res[1], res[0]);
+
+		//Check for Destructor Attribute
+		std::string value;
+		
+		if (LineProcessorHelper::TryGetAttributeValue(line, "Destr", value))
+		{
+			f.setDestrNeeded(true);
+			f.setIsMemoryBlock(value == "block");
+		}
 
 		object->getFields().push_back(f);
 

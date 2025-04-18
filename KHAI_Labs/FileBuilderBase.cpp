@@ -64,7 +64,8 @@ std::vector<Field*> FileBuilderBase::CreateSignature(
 	Field* parameters,
 	size_t start,
 	size_t end,
-	std::string returnType)
+	std::string returnType,
+	bool writeParams)
 {	
 	std::vector<Field*> result;
 
@@ -80,20 +81,23 @@ std::vector<Field*> FileBuilderBase::CreateSignature(
 	{
 		for (size_t i = start; i < end; i++)
 		{
-			if (i == end - 1)
+			if (writeParams)
 			{
-				*fstream << parameters[i].getType() << parameters[i].getName();
-			}
-			else
-			{
-				*fstream << parameters[i].getType() << parameters[i].getName() << ", ";
+				if (i == end - 1)
+				{
+					*fstream << parameters[i].getType() << parameters[i].getName();
+				}
+				else
+				{
+					*fstream << parameters[i].getType() << parameters[i].getName() << ", ";
+				}
 			}
 
 			result.push_back(parameters + i);
 		}
 	}
 
-	*fstream << funcName << ")";
+	*fstream << ")";
 
 	return result;
 }
@@ -235,34 +239,106 @@ void CPPFileBuilder::Build()
 
 	if (fstream->is_open())
 	{
-		*fstream << "#include" << fname << std::endl;
+		*fstream << "#include " << "\"" << *fname << "\"" << std::endl;
+		*fstream << "\n";
+		//Create Default Ctor
+		CreateFunctionDefinition(fstream, obj->getName(), obj->getName(), 
+			[](std::ofstream* fileStream, std::vector<Field*> paramsUsed, std::string& returnType)->void 
+			{}, false);
+		*fstream << "\n";
+		//Create Main Ctor
+		auto vfields = obj->getFields();
+		auto fields = ToArray(vfields);
+		auto len = vfields.size();
+		CreateFunctionDefinition(fstream, obj->getName(), obj->getName(),
+			[](std::ofstream* fileStream, std::vector<Field*> paramsUsed, std::string& returnType)->void 
+			{				
+				*fileStream << "\n";
+				for (const auto& p : paramsUsed)
+				{
+					*fileStream << "\tthis->" << "m_" << p->getName() << " = " << p->getName() << ";" << std::endl;
+				}
 
+			}, true, fields, 0, vfields.size());
+		*fstream << "\n";
+		std::string temp = prefix + obj->getName();
+		//Create Destructor		
+		CreateFunctionDefinition(fstream, obj->getName(), temp, [](std::ofstream* fileStream, 
+			std::vector<Field*> paramsUsed, std::string& returnType)->void
+			{
+				*fileStream << "\n";
 
-	}
+				for (const auto& p : paramsUsed)
+				{
+					if (p->IsDestrNeeded())
+					{
+						if (p->IsMemoryBlock())
+						{
+							*fileStream << "\tdelete[] " << "m_" << p->getName() << ";" << std::endl;
+						}
+						else
+						{
+							*fileStream << "\tdelete " << "m_" << p->getName() << ";" << std::endl;
+						}
+					}
+				}
 
-	
+			}, false, fields, 0, vfields.size());
 
+		//Create Getters Definition
+		int i = 0;
+		while (i < len)
+		{
+			CreateFunctionDefinition(fstream, obj->getName(), fields[i].getName(),
+				[](std::ofstream* fileStream, std::vector<Field*> paramsUsed, std::string& returnType)->void 
+				{
+					for (const auto& p : paramsUsed)
+					{
+						*fileStream << "\n\treturn " << "this->m_" << p->getName() << ";\n";
+					}
+				}, false, fields, i, i+1, vfields[i].getType());
+			++i;
+			*fstream << "\n";
+		}	
+		i = 0;
+		//Create Setters Definitions
 
+		while (i < len)
+		{
+			CreateFunctionDefinition(fstream, obj->getName(), obj->getName(),
+				[](std::ofstream* fileStream, std::vector<Field*> paramsUsed, std::string& returnType)->void
+				{
+					for (const auto& p : paramsUsed)
+					{
+						*fileStream << "\n\tthis->m_" << p->getName() << " = " << p->getName() << ";\n";
+					}
+
+				}, true, fields, i, i+1, "void");
+			++i;
+			*fstream << "\n";
+		}
+	}	
 }
 
-void CPPFileBuilder::CreateFunctionDefinition(std::ofstream* fstream, 
-	std::string& funcName, CreateBody createBodyFunction,
+void CPPFileBuilder::CreateFunctionDefinition(std::ofstream* fstream,
+	const std::string& objName,
+	const std::string& funcName, 
+	CreateBody createBodyFunction,
+	bool writeParams,
 	Field* parameters, 
 	size_t start, 
 	size_t end, 
 	std::string returnType)
 {
-	auto paramsTemp = FileBuilderBase::CreateSignature(fstream, funcName, parameters, start, end, returnType);
+	std::string temp = objName + "::" + funcName;
 
+	auto paramsTemp = FileBuilderBase::CreateSignature(fstream, 
+		temp, parameters, start, end, 
+		returnType, writeParams);
+
+	*fstream << "\n{";
 	createBodyFunction(fstream, paramsTemp, returnType);
-}
-
-void CPPFileBuilder::CreateGetterDefinition(Field* f)
-{
-}
-
-void CPPFileBuilder::CreateSetterDefinition(Field* f)
-{
+	*fstream << "\n}" << std::endl;
 }
 
 std::unique_ptr<FileBuilderBase> FileBuilderFactory::getFileBuilder(FileType key)

@@ -7,6 +7,7 @@ struct Example
 	Example(long int* field1, double* field2, double field3);
 
 	~Example();
+
 	long int*  get_field1();
 	double*  get_field2();
 	double  get_field3();

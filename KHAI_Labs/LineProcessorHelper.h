@@ -13,6 +13,10 @@ struct LineProcessorHelper
 
 	static std::vector<std::string> GetTypeAndNameFromLine(std::string& line, 
 		std::vector<std::string>& keyWords, const char* delim, const char* end);
+
+	inline static bool HasAttribute(std::string& line, const std::string& attribute);
+
+	static bool TryGetAttributeValue(std::string& line, const std::string& attribute, std::string& output);
 };
 
 #endif

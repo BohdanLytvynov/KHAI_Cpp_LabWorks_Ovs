@@ -122,7 +122,15 @@ int main()
 
                     getline(cin, pathToFile);
 
-                    outFileStream.open(pathToFile.c_str(), std::ios::app);
+                    std::string cpp(filename);
+
+                    if (cpp.find(".h") != std::string::npos)
+                    {
+                        cpp.erase(cpp.end() - 1);
+                        cpp.append("cpp");
+                    }
+
+                    outFileStream.open((pathToFile + "\\" + cpp).c_str(), std::ios::app);
 
                     if (outFileStream.is_open())
                     {
