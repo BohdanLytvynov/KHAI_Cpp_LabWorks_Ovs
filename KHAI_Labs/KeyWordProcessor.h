@@ -53,6 +53,15 @@ struct StructClassKeyWordProcessor : public SingleKeyWordProcessorBase
 
 //Handle types
 
+struct MultipleKeyWordProcessor : public MultipleKeyWordProcessorBase
+{
+	MultipleKeyWordProcessor(std::vector<std::string> keyWords);
+
+	MultipleKeyWordProcessor();
+
+	bool Process(std::string& line, Object* object) override;
+};
+
 struct TypeKeyWordProcessor : public MultipleKeyWordProcessorBase
 {
 	TypeKeyWordProcessor(std::vector<std::string> keyWords);
@@ -61,8 +70,6 @@ struct TypeKeyWordProcessor : public MultipleKeyWordProcessorBase
 
 	bool Process(std::string& line, Object* object) override;
 };
-
-
 
 #endif
 

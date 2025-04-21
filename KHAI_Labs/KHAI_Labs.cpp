@@ -18,7 +18,7 @@ std::string GetFilename(std::string& path)
 }
 
 int main()
-{    
+{       
     using namespace std;
 
     string pathToFile;    
@@ -38,10 +38,16 @@ int main()
     vector<string> keyWords = {"long", "int", "int*", "double", "double*" , "*"};
 
     vector<KeyWordProcessorBase*> processors;
+     
+    auto p1 = StructClassKeyWordProcessor("struct");
+    auto p2 = StructClassKeyWordProcessor("class");
+    auto p3 = MultipleKeyWordProcessor(keyWords);
+    auto p4 = TypeKeyWordProcessor(keyWords);
 
-    processors.push_back(new StructClassKeyWordProcessor("struct"));
-    processors.push_back(new StructClassKeyWordProcessor("class"));
-    processors.push_back(new TypeKeyWordProcessor(keyWords));
+    processors.push_back(&p1);
+    processors.push_back(&p2);
+    processors.push_back(&p3);
+    processors.push_back(&p4);
 
     unique_ptr<FileProcessor> fileProcessor = make_unique<FileProcessor>(processors);
   
@@ -172,11 +178,6 @@ int main()
             break;
         }
     } while (true);
-
-    for (auto p : processors)
-    {
-        delete p;
-    }
 
     return 0;
 }

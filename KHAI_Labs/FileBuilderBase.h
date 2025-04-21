@@ -4,7 +4,6 @@
 #define FILEBUILDERBASE_H
 #include "Object.h"
 #include <fstream>
-#include <map>
 
 typedef void (*CreateBody)(std::ofstream* fileStream, 
 	std::vector<Field*> paramsUsed, 
@@ -36,6 +35,8 @@ protected:
 	const std::string* getFileName() const;
 	Object* getObject();
 	Field* ToArray(std::vector<Field> collection);
+	void WriteLine(std::ofstream* fstream, const std::string& line);
+	void Write(std::ofstream* fstream, const std::string& line);
 
 	virtual std::vector<Field*> CreateSignature(std::ofstream* fstream,
 		std::string& funcName,
@@ -68,7 +69,19 @@ private:
 		size_t end = 0,
 		std::string returnType = "");	
 
-	void CreateField(std::ofstream* fstrean, Field* field);
+	void CreateMainCtorDeclaration(
+		std::ofstream* fstream,
+		std::string& funcName,
+		Field* parameters = nullptr,
+		size_t start = 0,
+		size_t end = 0
+	);
+
+	void CreateSetterForPtrDeclaration(std::ofstream *fstream, Field* f);
+
+	void CreateField(std::ofstream* fstrean, const Field* field);
+
+	void CreateCountField(std::ofstream* fstream, const std::string& name);
 };
 
 struct CPPFileBuilder : public FileBuilderBase
@@ -80,9 +93,13 @@ struct CPPFileBuilder : public FileBuilderBase
 	void Build() override;
 
 private:
-	std::map<int, bool> m_DestrHashTable;
+	void CreateMainCtorDefinition(
+		std::ofstream* fstream,
+		const std::string& funcName,
+		Field* parameters,
+		size_t count
+	);
 
-private:
 	void CreateFunctionDefinition(std::ofstream* fstream,
 		const std::string& objName,
 		const std::string& funcName, 
@@ -91,7 +108,9 @@ private:
 		Field* parameters = nullptr,
 		size_t start = 0,
 		size_t end = 0,
-		std::string returnType = "");
+		std::string returnType = "");	
+
+	void CreateSetterForPtrDefinition(std::ofstream* fstream, const Field* f, const std::string& objName);
 
 };
 

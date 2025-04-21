@@ -13,7 +13,7 @@ struct FileProcessor
 	FileProcessor(std::vector<KeyWordProcessorBase*>& processors);
 
 	void ProcessFile(std::fstream* streamToFile, Object* object);
-
+	
 private:
 	std::vector<KeyWordProcessorBase*> m_processors;
 };

@@ -14,9 +14,15 @@ struct LineProcessorHelper
 	static std::vector<std::string> GetTypeAndNameFromLine(std::string& line, 
 		std::vector<std::string>& keyWords, const char* delim, const char* end);
 
+	static bool HasPtr(std::string& line);
+
 	inline static bool HasAttribute(std::string& line, const std::string& attribute);
 
 	static bool TryGetAttributeValue(std::string& line, const std::string& attribute, std::string& output);
+
+	static std::string EraseLastEntry(std::string line, const std::string& value);
+
+	static std::string RemoveEntryOfCharacters(const std::string& line, std::vector<std::string> strings);
 };
 
 #endif

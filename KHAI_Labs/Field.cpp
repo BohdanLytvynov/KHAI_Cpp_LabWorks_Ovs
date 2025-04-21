@@ -1,6 +1,6 @@
 #include "Field.h"
 
-Field::Field() : m_name(""), m_type(""), m_destr_needed(false), m_mem_block(false)
+Field::Field() : m_name(""), m_type(""), m_isPtr(false)
 {
 	
 }
@@ -15,31 +15,30 @@ const std::string& Field::getType() const noexcept
 	return m_type;
 }
 
-const bool Field::IsDestrNeeded() const noexcept
+const bool Field::IsPtr() const noexcept
 {
-	return m_destr_needed;
+	return m_isPtr;
 }
 
-const bool Field::IsMemoryBlock() const noexcept
+void Field::setIsPtr(bool isPtr)
 {
-	return m_mem_block;
+	m_isPtr = isPtr;
 }
 
-void Field::setDestrNeeded(bool destrNeeded)
-{
-	m_destr_needed = destrNeeded;
-}
-
-void Field::setIsMemoryBlock(bool isMemBlock)
-{
-	m_mem_block = isMemBlock;
-}
-
-Field::Field(const std::string& name, const std::string& type)
-	: m_name(name), m_type(type), m_destr_needed(false), m_mem_block(false)
+Field::Field(const std::string& name, 
+	const std::string& type)
+	: m_name(name), m_type(type), m_isPtr(false)
 {}
+
+Field::Field(const std::string & name, 
+	const std::string & type, 
+	bool isPtr)
+	:Field(name, type) 
+{
+	m_isPtr = isPtr;
+}
 
 std::string Field::ToString() const
 {
-	return m_name + " " + m_type;
+	return m_name + " " + m_type + " IsPtr: " + std::to_string(m_isPtr);
 }

@@ -2,14 +2,17 @@
 #include"LineProcessorHelper.h"
 
 KeyWordProcessorBase::KeyWordProcessorBase()
-{}
+{
+}
 
 ////////////////////////SingleKeyWordProcessorBase
-SingleKeyWordProcessorBase::SingleKeyWordProcessorBase():m_keyWord("")
-{}
+SingleKeyWordProcessorBase::SingleKeyWordProcessorBase() :m_keyWord("")
+{
+}
 
-SingleKeyWordProcessorBase::SingleKeyWordProcessorBase(const std::string& keyWord):m_keyWord(keyWord)
-{}
+SingleKeyWordProcessorBase::SingleKeyWordProcessorBase(const std::string& keyWord) :m_keyWord(keyWord)
+{
+}
 
 std::string& SingleKeyWordProcessorBase::getKeyWord()
 {
@@ -18,11 +21,13 @@ std::string& SingleKeyWordProcessorBase::getKeyWord()
 
 //////////////////////MultipleKeyWordProcessorBase
 MultipleKeyWordProcessorBase::MultipleKeyWordProcessorBase()
-{}
+{
+}
 
 MultipleKeyWordProcessorBase::MultipleKeyWordProcessorBase(std::vector<std::string> keyWords)
 	: m_keyWords(keyWords)
-{}
+{
+}
 
 std::vector<std::string>& MultipleKeyWordProcessorBase::getKeyWords()
 {
@@ -31,7 +36,7 @@ std::vector<std::string>& MultipleKeyWordProcessorBase::getKeyWords()
 
 
 ////////////////////////Struct Class Processor
-StructClassKeyWordProcessor::StructClassKeyWordProcessor(const std::string& keyWord) 
+StructClassKeyWordProcessor::StructClassKeyWordProcessor(const std::string& keyWord)
 	: SingleKeyWordProcessorBase(keyWord)
 {
 }
@@ -62,12 +67,14 @@ bool StructClassKeyWordProcessor::Process(std::string& line, Object* object)
 
 TypeKeyWordProcessor::TypeKeyWordProcessor(std::vector<std::string> keyWords)
 	:MultipleKeyWordProcessorBase(keyWords)
-{}
+{
+}
 
-TypeKeyWordProcessor::TypeKeyWordProcessor():MultipleKeyWordProcessorBase()
-{}
+TypeKeyWordProcessor::TypeKeyWordProcessor() :MultipleKeyWordProcessorBase()
+{
+}
 
-bool TypeKeyWordProcessor::Process(std::string& line, Object * object)
+bool TypeKeyWordProcessor::Process(std::string& line, Object* object)
 {
 	auto keywords = MultipleKeyWordProcessorBase::getKeyWords();
 
@@ -76,23 +83,73 @@ bool TypeKeyWordProcessor::Process(std::string& line, Object * object)
 	if (res.size() == 2)
 	{
 		Field f(res[1], res[0]);
-
-		//Check for Destructor Attribute
-		std::string value;
 		
-		if (LineProcessorHelper::TryGetAttributeValue(line, "Destr", value))
-		{
-			f.setDestrNeeded(true);
-			f.setIsMemoryBlock(value == "block");
-		}
-
-		object->getFields().push_back(f);
+		object->appendField(f);
 
 		return true;
 	}
 
 	return false;
-	
+
 }
 
+MultipleKeyWordProcessor::MultipleKeyWordProcessor(std::vector<std::string> keyWords)
+	: MultipleKeyWordProcessorBase(keyWords)
+{
+}
 
+MultipleKeyWordProcessor::MultipleKeyWordProcessor()
+{
+}
+
+bool MultipleKeyWordProcessor::Process(std::string& line, Object* object)
+{
+	auto keywords = MultipleKeyWordProcessorBase::getKeyWords();
+
+	//We have found the ',' it means, that we have discovered line with 2 types
+	if (line.find(",") != std::string::npos)
+	{
+		std::vector<std::string> res;	
+		std::string typeWithoutPtr;
+		auto parts = LineProcessorHelper::SplitLine(line, *",");
+		int i = 0;		
+		for (auto& p : parts)
+		{
+			if (i == 0)
+			{
+				p.append(";");
+
+				res = LineProcessorHelper::GetTypeAndNameFromLine(p, keywords, " ", ";");
+
+				const char symb[] = " *";
+
+				typeWithoutPtr = LineProcessorHelper::RemoveEntryOfCharacters(res[0], { " ", "*"});
+						
+				Field f(res[1], res[0]);
+
+				f.setIsPtr(LineProcessorHelper::HasPtr(line));
+
+				object->appendField(f);
+			}
+			else
+			{			
+
+				//ProcessName
+				auto name = LineProcessorHelper::RemoveEntryOfCharacters(p, {" ", ";", "*"});
+
+				//Process Common Type				
+				bool hasPtr = LineProcessorHelper::HasPtr(p);
+				
+				Field f(name, hasPtr ? typeWithoutPtr + "*" : typeWithoutPtr, hasPtr);
+
+				object->appendField(f);
+			}
+			
+			++i;
+		}
+
+		return true;
+	}
+
+	return false;
+}
